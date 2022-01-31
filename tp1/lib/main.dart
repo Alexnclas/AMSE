@@ -4,6 +4,18 @@ void main() {
   runApp(const MyApp());
 }
 
+//Style des pages
+const TextStyle optionStyle =  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  
+
+
+
+
+
+
+
+
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -34,22 +46,13 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   //Page choisie
   int _selectedIndex = 0;
-  //Style des pages
-  static const TextStyle optionStyle =  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  
+  
   ///Liste des pages
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Music',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: About',
-      style: optionStyle,
-    ),
+  static List<Widget> _widgetOptions = <Widget>[
+    MyHomePage(),
+    MyMusicPage(),
+    MyAboutPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -85,6 +88,36 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
       ),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget{
+  @override
+  Widget build(BuildContext context){
+    return Text(
+      'Index 0: Home',
+      style: optionStyle,
+    );
+  }
+}
+
+class MyMusicPage extends StatelessWidget{
+  @override
+  Widget build(BuildContext context){
+    return Text(
+      'Index 1: Music',
+      style: optionStyle,
+    );
+  }
+}
+
+class MyAboutPage extends StatelessWidget{
+  @override
+  Widget build(BuildContext context){
+    return Text(
+      'Index 2: About',
+      style: optionStyle,
     );
   }
 }
