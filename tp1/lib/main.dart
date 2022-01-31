@@ -28,40 +28,83 @@ final exampleSongs = [
   MediaModel("../images/Albums/frankOceanChannelOrange.jpeg", "Frank Ocean - Super Rich Kids", "R&B, Soul"),
 ];
 
+
+
+
+
+
 List<Widget> createMediaContainerList(List<MediaModel> medias){
   List<Widget> returnList = [];
   medias.forEach((media){
-    //Image
-    returnList.add(Image(
-      image: NetworkImage(media.imageUrl),
-      )
-    );
-    //Titre
-    returnList.add(Container(
-      height: 75,
-      child: Center(child: 
-        Text(
-          media.title,
-          textAlign: TextAlign.center,
-          )
+    returnList.add(
+      Card(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Image(
+                image: NetworkImage(media.imageUrl),
+                width: 100.0,
+                height: 100.0,
+                ),
+              title: Text(
+                media.title,
+                textAlign: TextAlign.center,
+                ),
+              subtitle: Text(
+                media.description,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                TextButton(
+                  child: const Text('Ajouter aux favoris'),
+                  onPressed: () {/* ... */},
+                )
+              ],
+            ),
+          ],
         ),
       )
     );
-    //Description
-    returnList.add(Container(
-      height: 30,
-      child: Center(child: 
-          Text(
-              media.description,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontStyle: FontStyle.italic),
-            )
-        ),
-      )
-    );
-    //Diviseur
-    returnList.add(const Divider());
+
+
+    //old
+    // //Image
+    // returnList.add(Image(
+    //   image: NetworkImage(media.imageUrl),
+    //   )
+    // );
+    // //Titre
+    // returnList.add(Container(
+    //   height: 75,
+    //   child: Center(child: 
+    //     Text(
+    //       media.title,
+    //       textAlign: TextAlign.center,
+    //       )
+    //     ),
+    //   )
+    // );
+    // //Description
+    // returnList.add(Container(
+    //   height: 30,
+    //   child: Center(child: 
+    //       Text(
+    //           media.description,
+    //           textAlign: TextAlign.center,
+    //           overflow: TextOverflow.ellipsis,
+    //           style: const TextStyle(fontStyle: FontStyle.italic),
+    //         )
+    //     ),
+    //   )
+    // );
+    // //Diviseur
+    // returnList.add(const Divider());
   });
   return returnList;
 }
