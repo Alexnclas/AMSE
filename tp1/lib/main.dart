@@ -28,22 +28,22 @@ class MyApp extends StatelessWidget {
         // This is the theme of your application.
         primarySwatch: Colors.blue,
       ),
-      home: MyStatefulWidget(),
+      home: MyStatefulPage(),
       //home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget({Key? key}) : super(key: key);
+class MyStatefulPage extends StatefulWidget {
+  const MyStatefulPage({Key? key}) : super(key: key);
 
   @override
-  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+  State<MyStatefulPage> createState() => _MyStatefulPageState();
 }
 
 
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+class _MyStatefulPageState extends State<MyStatefulPage> {
   //Page choisie
   int _selectedIndex = 0;
   
@@ -51,7 +51,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   ///Liste des pages
   static List<Widget> _widgetOptions = <Widget>[
     MyHomePage(),
-    MyMusicPage(),
+    MyStatefulMusicPage(),
     MyAboutPage(),
   ];
 
@@ -102,15 +102,34 @@ class MyHomePage extends StatelessWidget{
   }
 }
 
-class MyMusicPage extends StatelessWidget{
+
+class MyStatefulMusicPage extends StatefulWidget {
+  const MyStatefulMusicPage({Key? key}) : super(key: key);
+
+  @override
+  State<MyStatefulMusicPage> createState() => _MyStatefulMusicPageState();
+}
+
+class _MyStatefulMusicPageState extends State<MyStatefulMusicPage> {
   @override
   Widget build(BuildContext context){
     return Text(
-      'Index 1: Music',
-      style: optionStyle,
+      'Index 1: Music (Now Stateful!)',
+      style: optionStyle, 
     );
   }
 }
+
+
+// class MyMusicPage extends StatelessWidget{
+//   @override
+//   Widget build(BuildContext context){
+//     return Text(
+//       'Index 1: Music',
+//       style: optionStyle,
+//     );
+//   }
+// }
 
 class MyAboutPage extends StatelessWidget{
   @override
