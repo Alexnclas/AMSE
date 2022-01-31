@@ -166,16 +166,15 @@ class _MyStatefulMusicPageState extends State<MyStatefulMusicPage> {
                       color: alreadySaved ? Colors.red : null,
                       semanticLabel: alreadySaved ?'Remove from saved' : 'Save',
                     ),
-                    onTap: () {      // NEW lines from here...
+                    onTap: () {     
                       setState(() {
-                        print(savedMedias.contains(media));
                         if (alreadySaved) {
                           savedMedias.remove(media);
                         } else { 
                           savedMedias.add(media); 
                         } 
                       });
-                    },               // ... to here.
+                    },
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -191,14 +190,12 @@ class _MyStatefulMusicPageState extends State<MyStatefulMusicPage> {
 
   @override
   Widget build(BuildContext context){
-      medias.forEach((media){
-          childrenList.add(buildMediaCard(media));
-      });
       //Création du widget créant la liste de chansons
-      return ListView(
+      return ListView.builder(
         //Separation des différentes chansons (Tiré de "Write your first Flutter app, part 1")
         padding: const EdgeInsets.all(16),
-        children: childrenList,
+        itemCount: medias.length,
+        itemBuilder: (context, i) => buildMediaCard(medias[i]),
       );
   }
 }
