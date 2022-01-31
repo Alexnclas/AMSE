@@ -6,7 +6,9 @@ void main() {
 
 //Style des pages
 const TextStyle optionStyle =  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  
+final Color couleurNavbar = Colors.red;
+
+
 //Objets a recenser (Classes)
 class MediaModel {
   String imageUrl = "";
@@ -29,14 +31,36 @@ final exampleSongs = [
 List<Widget> createMediaContainerList(List<MediaModel> medias){
   List<Widget> returnList = [];
   medias.forEach((media){
+    //Image
     returnList.add(Image(
       image: NetworkImage(media.imageUrl),
-    ));
+      )
+    );
+    //Titre
     returnList.add(Container(
       height: 75,
-      child: Center(child: Text(media.title)),
-    )
+      child: Center(child: 
+        Text(
+          media.title,
+          textAlign: TextAlign.center,
+          )
+        ),
+      )
     );
+    //Description
+    returnList.add(Container(
+      height: 30,
+      child: Center(child: 
+          Text(
+              media.description,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontStyle: FontStyle.italic),
+            )
+        ),
+      )
+    );
+    //Diviseur
     returnList.add(const Divider());
   });
   return returnList;
@@ -81,6 +105,7 @@ class _MyStatefulPageState extends State<MyStatefulPage> {
     MyHomePage(),
     MyStatefulMusicPage(),
     MyAboutPage(),
+    MyFavorites(),
   ];
 
   void _onItemTapped(int index) {
@@ -98,18 +123,26 @@ class _MyStatefulPageState extends State<MyStatefulPage> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items:  <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
+            backgroundColor: couleurNavbar,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.audiotrack),
             label: 'Music',
+            backgroundColor: couleurNavbar,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.info),
             label: 'About',
+            backgroundColor: couleurNavbar,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorites',
+            backgroundColor: couleurNavbar,
           ),
         ],
         currentIndex: _selectedIndex,
@@ -163,6 +196,16 @@ class MyAboutPage extends StatelessWidget{
   Widget build(BuildContext context){
     return Text(
       'Index 2: About',
+      style: optionStyle,
+    );
+  }
+}
+
+class MyFavorites extends StatelessWidget{
+  @override
+  Widget build(BuildContext context){
+    return Text(
+      'Index 3: Favorites',
       style: optionStyle,
     );
   }
