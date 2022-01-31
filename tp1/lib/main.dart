@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+//Attention j'ai changé la version du sdk necessaire dans le pubspec.yaml
 void main() {
   runApp(const MyApp());
 }
@@ -13,103 +13,32 @@ final Color couleurNavbar = Colors.red;
 class MediaModel {
   String imageUrl = "";
   String title  = "";
+  String genre = "";
   String description  = "";
   //Constructor
-  MediaModel(imgU, t, d){
+  MediaModel(imgU, t, g, d){
     this.imageUrl = imgU;
     this.title = t;
+    this.genre = g;
     this.description = d;
     }
+  bool operator ==(other) {
+    if (other is MediaModel) {
+      /* print(other.title);
+      print(this.title);
+      print(this.title == other.title); */
+      return this.title == other.title;
+    } else {
+      return false;
+    }
+  }
 }
-//Objets a recenser (Examples)
+//Objets a recenser (Examples) TROUVER DES IMAGES DE LA TAILLE DE MAGGOT BRAIN
 final exampleSongs = [
-  MediaModel("../images/Albums/parliamentMothershipConnection.jpg", "Parliament - Give Up The Funk", "Funk"),
-  MediaModel("../images/Albums/funkadelicMaggotBrain.jpg", "Funkadelic - Maggot Brain", "Funk"),
-  MediaModel("../images/Albums/frankOceanChannelOrange.jpeg", "Frank Ocean - Super Rich Kids", "R&B, Soul"),
+  MediaModel("../images/Albums/parliamentMothershipConnection.jpg", "Parliament - Give Up The Funk", "Funk", "Description 1"),
+  MediaModel("../images/Albums/funkadelicMaggotBrain.jpg", "Funkadelic - Maggot Brain", "Funk", "Description 2"),
+  MediaModel("../images/Albums/frankOceanChannelOrange.jpeg", "Frank Ocean - Super Rich Kids", "R&B, Soul", "Description 3"),
 ];
-
-
-
-
-
-
-List<Widget> createMediaContainerList(List<MediaModel> medias){
-  List<Widget> returnList = [];
-  medias.forEach((media){
-    returnList.add(
-      Card(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              leading: Image(
-                image: NetworkImage(media.imageUrl),
-                width: 100.0,
-                height: 100.0,
-                ),
-              title: Text(
-                media.title,
-                textAlign: TextAlign.center,
-                ),
-              subtitle: Text(
-                media.description,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                TextButton(
-                  child: const Text('Ajouter aux favoris'),
-                  onPressed: () {/* ... */},
-                )
-              ],
-            ),
-          ],
-        ),
-      )
-    );
-
-
-    //old
-    // //Image
-    // returnList.add(Image(
-    //   image: NetworkImage(media.imageUrl),
-    //   )
-    // );
-    // //Titre
-    // returnList.add(Container(
-    //   height: 75,
-    //   child: Center(child: 
-    //     Text(
-    //       media.title,
-    //       textAlign: TextAlign.center,
-    //       )
-    //     ),
-    //   )
-    // );
-    // //Description
-    // returnList.add(Container(
-    //   height: 30,
-    //   child: Center(child: 
-    //       Text(
-    //           media.description,
-    //           textAlign: TextAlign.center,
-    //           overflow: TextOverflow.ellipsis,
-    //           style: const TextStyle(fontStyle: FontStyle.italic),
-    //         )
-    //     ),
-    //   )
-    // );
-    // //Diviseur
-    // returnList.add(const Divider());
-  });
-  return returnList;
-}
-
-final exampleContainerList = createMediaContainerList(exampleSongs);
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -124,7 +53,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: MyStatefulPage(),
-      //home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -215,21 +143,63 @@ class MyStatefulMusicPage extends StatefulWidget {
 }
 
 class _MyStatefulMusicPageState extends State<MyStatefulMusicPage> {
-  final songContainers = exampleContainerList;
-  
-  Widget buildSongList(){
-    //Création du widget créant la liste de chansons
-    return ListView(
-      //Separation des différentes chansons (Tiré de "Write your first Flutter app, part 1")
-      padding: const EdgeInsets.all(16),
-      children: songContainers,
-    );
-  }
+  //final songContainers = exampleContainerList;
+  List<MediaModel> medias = exampleSongs;
+  List<Widget> childrenList = [];
+  final savedMedias = <MediaModel>{};
 
+  Widget buildMediaCard(MediaModel media){
+    final alreadySaved = savedMedias.contains(media);
+    return Card(
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                children: [
+                  Image.asset(media.imageUrl),
+                  ListTile(
+                    title: Text(media.title),
+                    subtitle: Text(
+                      media.genre,
+                      style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                    ),
+                    trailing: Icon(
+                      alreadySaved ? Icons.favorite : Icons.favorite_border,
+                      color: alreadySaved ? Colors.red : null,
+                      semanticLabel: alreadySaved ?'Remove from saved' : 'Save',
+                    ),
+                    onTap: () {      // NEW lines from here...
+                      setState(() {
+                        print(savedMedias.contains(media));
+                        if (alreadySaved) {
+                          savedMedias.remove(media);
+                        } else { 
+                          savedMedias.add(media); 
+                        } 
+                      });
+                    },               // ... to here.
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      media.description,
+                      style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                    ),
+                  ),
+                ],
+              ),
+            );
+  }
 
   @override
   Widget build(BuildContext context){
-    return buildSongList();
+      medias.forEach((media){
+          childrenList.add(buildMediaCard(media));
+      });
+      //Création du widget créant la liste de chansons
+      return ListView(
+        //Separation des différentes chansons (Tiré de "Write your first Flutter app, part 1")
+        padding: const EdgeInsets.all(16),
+        children: childrenList,
+      );
   }
 }
 
