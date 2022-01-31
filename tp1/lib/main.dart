@@ -21,125 +21,23 @@ class MediaModel {
 }
 //Objets a recenser (Examples)
 final exampleSongs = [
-  MediaModel(
-    "ImageUrl 1", "Titre 1", "Description 1",
-  ),
-  MediaModel(
-    "ImageUrl 2",
-    "Titre 2",
-    "Description 2",
-  ),
-  MediaModel(
-    "ImageUrl 3",
-    "Titre 3",
-    "Description 3",
-  ),
-  MediaModel(
-    "ImageUrl 4",
-    "Titre 4",
-    "Description 4",
-  ),
-  MediaModel(
-    "ImageUrl 4",
-    "Titre 4",
-    "Description 4",
-  ),
-  MediaModel(
-    "ImageUrl 5",
-    "Titre 5",
-    "Description 5",
-  ),
-  MediaModel(
-    "ImageUrl 6",
-    "Titre 6",
-    "Description 6",
-  ),
-  MediaModel(
-    "ImageUrl 6",
-    "Titre 6",
-    "Description 6",
-  ),
-  MediaModel(
-    "ImageUrl 7",
-    "Titre 7",
-    "Description 7",
-  ),
-  MediaModel(
-    "ImageUrl 8",
-    "Titre 8",
-    "Description 8",
-  ),
-  MediaModel(
-    "ImageUrl 9",
-    "Titre 9",
-    "Description 9",
-  ),
-  MediaModel(
-    "ImageUrl 10",
-    "Titre 10",
-    "Description 10",
-  ),
-  MediaModel(
-    "ImageUrl 11",
-    "Titre 11",
-    "Description 11",
-  ),
-  MediaModel(
-    "ImageUrl 12",
-    "Titre 12",
-    "Description 12",
-  ),
-  MediaModel(
-    "ImageUrl 13",
-    "Titre 13",
-    "Description 13",
-  ),
-  MediaModel(
-    "ImageUrl 14",
-    "Titre 14",
-    "Description 14",
-  ),
-  MediaModel(
-    "ImageUrl 15",
-    "Titre 15",
-    "Description 15",
-  ),
-  MediaModel(
-    "ImageUrl 16",
-    "Titre 16",
-    "Description 16",
-  ),
-  MediaModel(
-    "ImageUrl 17",
-    "Titre 17",
-    "Description 17",
-  ),
-  MediaModel(
-    "ImageUrl 18",
-    "Titre 18",
-    "Description 18",
-  ),
-  MediaModel(
-    "ImageUrl 19",
-    "Titre 19",
-    "Description 19",
-  ),
-  MediaModel(
-    "ImageUrl 20",
-    "Titre 20",
-    "Description 20",
-  ),
+  MediaModel("../images/Albums/parliamentMothershipConnection.jpg", "Parliament - Give Up The Funk", "Funk"),
+  MediaModel("../images/Albums/funkadelicMaggotBrain.jpg", "Funkadelic - Maggot Brain", "Funk"),
+  MediaModel("../images/Albums/frankOceanChannelOrange.jpeg", "Frank Ocean - Super Rich Kids", "R&B, Soul"),
 ];
 
 List<Widget> createMediaContainerList(List<MediaModel> medias){
   List<Widget> returnList = [];
   medias.forEach((media){
-      return returnList.add(Container(
-        height: 50,
-        color: Colors.amber[600],
-        child: Center(child: Text(media.title)),
-      )
+    returnList.add(Image(
+      image: NetworkImage(media.imageUrl),
+    ));
+    returnList.add(Container(
+      height: 75,
+      child: Center(child: Text(media.title)),
+    )
     );
+    returnList.add(const Divider());
   });
   return returnList;
 }
@@ -241,14 +139,14 @@ class MyStatefulMusicPage extends StatefulWidget {
 }
 
 class _MyStatefulMusicPageState extends State<MyStatefulMusicPage> {
-  final _songsToDisplay = exampleContainerList;
+  final songContainers = exampleContainerList;
   
   Widget buildSongList(){
     //Création du widget créant la liste de chansons
     return ListView(
       //Separation des différentes chansons (Tiré de "Write your first Flutter app, part 1")
       padding: const EdgeInsets.all(16),
-      children: _songsToDisplay,
+      children: songContainers,
     );
   }
 
@@ -256,10 +154,6 @@ class _MyStatefulMusicPageState extends State<MyStatefulMusicPage> {
   @override
   Widget build(BuildContext context){
     return buildSongList();
-    // return Text(
-    //   _songsToDisplay[0].title,
-    //   style: optionStyle, 
-    // );
   }
 }
 
