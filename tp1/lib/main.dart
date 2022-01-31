@@ -43,11 +43,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       style: optionStyle,
     ),
     Text(
-      'Index 1: Test Alex',
+      'Index 1: Music',
       style: optionStyle,
     ),
     Text(
-      'Index 2: School',
+      'Index 2: About',
       style: optionStyle,
     ),
   ];
@@ -73,12 +73,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Business',
+            icon: Icon(Icons.audiotrack),
+            label: 'Music',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'School',
+            icon: Icon(Icons.info),
+            label: 'About',
           ),
         ],
         currentIndex: _selectedIndex,
