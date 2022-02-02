@@ -221,4 +221,10 @@ class MyFavorites extends StatelessWidget{
   }
 }
 
-
+//INDEX
+//ABOUT
+//Lorsque la liste des medias se build, récuperer lse favoris du cart
+//GESTION DES FAVORIS (Page favoris)
+//AJOUTER ON TAP D'UN MEDIA AJOUTE LE MEDIA
+//AJOUTER DES FILMS / SERIES
+//DSECENDRE LE CART DANS LE TREE
