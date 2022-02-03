@@ -2,7 +2,9 @@
 Bienvenue sur mon repository de l'UV AMSE.
 Dans le cadre de mon cursus à IMT Nord Europe, j'ai réalisé pendant le cours Applications Mobiles et Systèmes Embarqués (AMSE) deux applications codées en Dart afin d'utiliser le framwork Flutter.
 
-La première que vous trouverez dans le dossier /tp1 vous permet de 
+La première, Record Keeper, que vous trouverez dans le dossier /tp1 vous permet de scroller parmi une sélection de chansons et d'en ajouter en favoris.
+De plus, en cliquant sur l'image vous trouverez une courte description de la musique (Et/ou du contexte dans lequel elle a été écrite).
+
 
 La deuxième ... (Work In Progress)
 
