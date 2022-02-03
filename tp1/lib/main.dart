@@ -28,9 +28,18 @@ class MediaModel {
 }
 //Objets a recenser (Examples) TROUVER DES IMAGES DE LA TAILLE DE MAGGOT BRAIN
 final exampleSongs = [
-  MediaModel("../images/Albums/parliamentMothershipConnection.jpg", "Parliament - Give Up The Funk", "Funk", "Description 1", false),
-  MediaModel("../images/Albums/funkadelicMaggotBrain.jpg", "Funkadelic - Maggot Brain", "Funk", "Description 2", false),
-  MediaModel("../images/Albums/frankOceanChannelOrange.jpeg", "Frank Ocean - Super Rich Kids", "R&B, Soul", "Description 3", false),
+  MediaModel("../images/Albums/parliamentMothershipConnection.jpg", "Parliament - Give Up The Funk", "Funk", 
+  "Give Up the Funk (Tear the Roof off the Sucker) is a funk song by Parliament. It was released as a single under the name 'Tear the Roof off the Sucker (Give Up the Funk)'.\n\n It was the second single to be released from Parliament's 1975 album Mothership Connection (following 'P. Funk (Wants to Get Funked Up)').\n\n With its anthemic sing-along chorus, it is one of the most famous P-Funk songs. It also became Parliament's first certified million-selling single, going Gold in 1976.\n\n The bass vocal at the beginning of the song is performed by Ray Davis."
+  , false),
+  MediaModel("../images/Albums/funkadelicMaggotBrain.jpg", "Funkadelic - Maggot Brain", "Funk",
+   "Maggot Brain is an instrumental by the American band Funkadelic, released on their 1971 album of the same name.\n\n The original recording, over ten minutes long, features little more than a spoken introduction and an extended guitar solo by Eddie Hazel. Music critic Greg Tate described it as Funkadelic's A Love Supreme; it is #60 on the Rolling Stone list of '100 Greatest Guitar Songs'.\n\nReportedly, 'Maggot Brain' was Hazel's nickname. Other sources say the title is a reference to band leader George Clinton finding his brother's 'decomposed dead body, skull cracked, in a Chicago apartment.'"
+   , false),
+  MediaModel("../images/Albums/frankOceanChannelOrange.jpeg", "Frank Ocean - Super Rich Kids", "R&B, Soul", 
+  "'Super Rich Kids' is a song by American singer Frank Ocean, and the fifth single from his debut studio album, Channel Orange.\n\n  It was first performed live by Ocean in 2011 and then on his Channel Orange Tour in 2012. The single was released in March 2013.\n\n  The song is in the style of R&B and neo soul, and includes references to and samples of the songs 'Bennie and the Jets' by Elton John, 'Got to Give It Up' by Marvin Gaye, and 'Real Love' by Mary J. Blige.\n\n  It addresses young, wealthy characters' ennui and fears of the financial crisis with dry humor."
+  , false),
+  MediaModel("../images/Albums/howdoesitfeel.jpg", "D'angelo - Untitled (How Does It Feel)", "Neo soul, R&B",
+  "'Untitled (How Does It Feel)' is a song by American singer, songwriter, and multi-instrumentalist D'Angelo.\n\n  It was released on January 1, 2000, by Virgin Records as a radio single in promotion of his second studio album Voodoo (2000). \n\n Written and produced by D'Angelo and Raphael Saadiq, the song was originally composed as a tribute to musician Prince. 'Untitled (How Does It Feel)' contains a vintage style and sound similar to that of Prince's early musical work. The song's lyrics concern a man's plea to his lover for sex."
+  ,false)
 ];
 
 void main() {
@@ -50,6 +59,7 @@ class MyApp extends StatelessWidget {
       title: 'Médiathèque (TP1)',
       theme: ThemeData(
         // This is the theme of your application.
+        scaffoldBackgroundColor: Colors.grey[300],
         primarySwatch: Colors.blue,
       ),
       home: MyStatefulPage(),
@@ -81,7 +91,7 @@ class _MyStatefulPageState extends State<MyStatefulPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Test1"),
+        title: Text("Record keeper"),
       ),
       body: SingleChildScrollView(
         child:Column(
@@ -101,8 +111,8 @@ class _MyStatefulPageState extends State<MyStatefulPage> {
                     child: Column(
                       children: [
                         GestureDetector(
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () {                       //ZOOM sur une carte
+                            Navigator.push(   
                                       context,
                                       MaterialPageRoute(
                                           builder: (context){
@@ -110,13 +120,32 @@ class _MyStatefulPageState extends State<MyStatefulPage> {
                                               appBar: AppBar(
                                                 title: Text(medias[i].title),
                                               ),
-                                              body: Text(medias[i].description),
+                                              body: Center(
+                                                child:
+                                                Padding(
+                                                  padding: EdgeInsets.all(16.0),
+                                                  child:Column(
+                                                            children:[
+                                                              Image.asset(
+                                                                  medias[i].imageUrl,
+                                                                  fit: BoxFit.cover, // Fixes border issues
+                                                                ),
+                                                              Padding(
+                                                                padding: EdgeInsets.all(16.0),
+                                                                child:Text(medias[i].genre)
+                                                                ),
+                                                              Text(medias[i].description)
+                                                            ],
+                                                          ),
+                                                      ),
+                                                )
+                                                
                                             );
                                           }
                                           ));
                           }, 
                           child: Image.asset(medias[i].imageUrl,
-                            fit: BoxFit.cover, // Fixes border issues
+                            fit: BoxFit.cover,
                           ),
                         ),
                         ListTile(
@@ -136,13 +165,13 @@ class _MyStatefulPageState extends State<MyStatefulPage> {
                             });
                           },
                         ),
-                        Padding(
+                        /* Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
                             medias[i].description,
                             style: TextStyle(color: Colors.black.withOpacity(0.6)),
                           ),
-                        ),
+                        ),*/
                       ],
                     ),
                   );
