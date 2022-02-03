@@ -77,7 +77,6 @@ class _MyStatefulPageState extends State<MyStatefulPage> {
 
 
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,7 +100,25 @@ class _MyStatefulPageState extends State<MyStatefulPage> {
                     clipBehavior: Clip.antiAlias,
                     child: Column(
                       children: [
-                        Image.asset(medias[i].imageUrl),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context){
+                                            return Scaffold(
+                                              appBar: AppBar(
+                                                title: Text(medias[i].title),
+                                              ),
+                                              body: Text(medias[i].description),
+                                            );
+                                          }
+                                          ));
+                          }, 
+                          child: Image.asset(medias[i].imageUrl,
+                            fit: BoxFit.cover, // Fixes border issues
+                          ),
+                        ),
                         ListTile(
                           title: Text(medias[i].title),
                           subtitle: Text(
