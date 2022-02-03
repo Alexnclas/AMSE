@@ -37,10 +37,20 @@ final exampleSongs = [
   MediaModel("../images/Albums/frankOceanChannelOrange.jpeg", "Frank Ocean - Super Rich Kids", "R&B, Soul", 
   "'Super Rich Kids' is a song by American singer Frank Ocean, and the fifth single from his debut studio album, Channel Orange.\n\n  It was first performed live by Ocean in 2011 and then on his Channel Orange Tour in 2012. The single was released in March 2013.\n\n  The song is in the style of R&B and neo soul, and includes references to and samples of the songs 'Bennie and the Jets' by Elton John, 'Got to Give It Up' by Marvin Gaye, and 'Real Love' by Mary J. Blige.\n\n  It addresses young, wealthy characters' ennui and fears of the financial crisis with dry humor."
   , false),
-  MediaModel("../images/Albums/howdoesitfeel.jpg", "D'angelo - Untitled (How Does It Feel)", "Neo soul, R&B",
+  MediaModel("../images/Albums/howdoesitfeel.jpg", "D'Angelo - Untitled (How Does It Feel)", "Neo soul, R&B",
   "'Untitled (How Does It Feel)' is a song by American singer, songwriter, and multi-instrumentalist D'Angelo.\n\n  It was released on January 1, 2000, by Virgin Records as a radio single in promotion of his second studio album Voodoo (2000). \n\n Written and produced by D'Angelo and Raphael Saadiq, the song was originally composed as a tribute to musician Prince. 'Untitled (How Does It Feel)' contains a vintage style and sound similar to that of Prince's early musical work. The song's lyrics concern a man's plea to his lover for sex."
-  ,false)
+  ,false),
+  MediaModel("../images/Albums/getLucky.jpg", "Daft punk - Get Lucky", "Disco, House", 
+  '"Get Lucky" is a song by French electronic music duo Daft Punk, featuring American singer Pharrell Williams and American guitarist Nile Rodgers. It was co-written by all of them.\n\n Daft Punk released the song as the lead single from their fourth and final studio album, Random Access Memories, on 19 April 2013.\n\n Before its release as a single, "Get Lucky" was featured in television advertisements broadcast during Saturday Night Live, after which Rodgers and Williams announced their involvement in the track.\n\n "Get Lucky" is a house-inspired disco, funk, and pop track with lyrics that, according to Williams, are about the good fortune of connecting with someone, as well as sexual chemistry.'
+  , false),
+  MediaModel("../images/Albums/dreamer.jpg", "Supertramp - Dreamer", "Progressive rock", 
+  "'Dreamer' is a hit single from British band Supertramp's 1974 album 'Crime of the Century'. It peaked at number 13 on the UK singles chart in February 1975.\n\n'Dreamer' was composed by Roger Hodgson on his Wurlitzer piano at his mother's house when he was 19 years old.  \n\nAt that time he recorded a demo of the song using vocals, Wurlitzer, and banging cardboard boxes for percussion.\n\n Hodgson recalled, 'I was excited – it was the first time I laid hands on a Wurlitzer.'"
+  , false
+  ),
+  
 ];
+  
+
 
 void main() {
   runApp(const MyApp());
@@ -97,7 +107,25 @@ class _MyStatefulPageState extends State<MyStatefulPage> {
         child:Column(
         children: [
           (_selectedIndex == 0) ? //Page d'acceuil
-            Text("Home")                                              //To Do
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child:
+                Column(
+                children: [
+                  Image.asset(
+                    "../images/record.png",
+                    fit: BoxFit.cover, // Fixes border issues
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: const Text(
+                        'Welcome on RecordKeeper !',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                  ),
+                ]
+              )
+            )
             : Container(),
           (_selectedIndex == 1) ? //Page des musiques
             ListView.builder(
@@ -179,7 +207,39 @@ class _MyStatefulPageState extends State<MyStatefulPage> {
             )
             : Container(),
           (_selectedIndex == 2) ? //Page a propos
-            Text("About")                                             //To Do
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child:
+                Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: const Text(
+                        'Welcome on RecordKeeper !',
+                      ),
+                  ),
+                  const Text(
+                        'This application allows you to review my music collection and to choose your favorite songs',
+                      ),
+                  Padding(
+                  padding: const EdgeInsets.all(16)),  
+                  const Text(
+                        'You can view the music collection by clicking on the music note of the navigation bar at the bottom. Then you can just scroll through the songs. By clicking on the image of the song you can access a short description of it.',
+                      ),
+                  Padding(
+                  padding: const EdgeInsets.all(16)),  
+                  const Text(
+                        'Finally, you can add a song to your favorites by clicking on the heart next to the name. You can view your favorites by clicking on the heart icon of the navigation bar at the bottom.',
+                      ),
+                  Padding(
+                    padding: const EdgeInsets.all(16)),  
+                  const Text(
+                        'This application was developped by Alex NICOLAS for the AMSE course at IMT Nord Europe',
+                      ),
+                      
+                ]
+              )
+            )
             : Container(),
           (_selectedIndex == 3) ? //Page liste des favoris
             ListView.builder(
@@ -193,7 +253,44 @@ class _MyStatefulPageState extends State<MyStatefulPage> {
                     clipBehavior: Clip.antiAlias,
                     child: Column(
                       children: [
-                        Image.asset(medias[i].imageUrl),
+                        GestureDetector(
+                          onTap: () {                       //ZOOM sur une carte
+                            Navigator.push(   
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context){
+                                            return Scaffold(
+                                              appBar: AppBar(
+                                                title: Text(medias[i].title),
+                                              ),
+                                              body: Center(
+                                                child:
+                                                Padding(
+                                                  padding: EdgeInsets.all(16.0),
+                                                  child:Column(
+                                                            children:[
+                                                              Image.asset(
+                                                                  medias[i].imageUrl,
+                                                                  fit: BoxFit.cover, // Fixes border issues
+                                                                ),
+                                                              Padding(
+                                                                padding: EdgeInsets.all(16.0),
+                                                                child:Text(medias[i].genre)
+                                                                ),
+                                                              Text(medias[i].description)
+                                                            ],
+                                                          ),
+                                                      ),
+                                                )
+                                                
+                                            );
+                                          }
+                                          ));
+                          }, 
+                          child: Image.asset(medias[i].imageUrl,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                         ListTile(
                           title: Text(medias[i].title),
                           subtitle: Text(
@@ -210,13 +307,6 @@ class _MyStatefulPageState extends State<MyStatefulPage> {
                               medias[i].isFavorite = !medias[i].isFavorite;
                             });
                           },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            medias[i].description,
-                            style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                          ),
                         ),
                       ],
                     ),
