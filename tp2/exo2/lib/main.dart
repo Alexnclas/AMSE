@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:exo2/changeNotifier.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,11 +42,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  double valueSlider1 = 20;
-  double valueSlider2 = 20;
-  double valueSlider3 = 20;
-  bool isChecked = false;
+  double oldvalueSlider1 = 20;
+  double oldvalueSlider2 = 20;
+  double oldvalueSlider3 = 20;
   int _counter = 0;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -53,87 +56,132 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(16.0),
-              ),
-              Container(
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(color: Colors.white),
-                child:Transform(
-                  alignment: Alignment.topRight,
-                  transform: Matrix4.identity()
-                    ..rotateX(valueSlider1)
-                    ..rotateY(valueSlider2)
-                    ..scale(valueSlider3/100),
-                  child: Image(image: NetworkImage('../images/parliamentMothershipConnection.jpg')),
+    return ChangeNotifierProvider(
+      create: (context) => animationButtonChange(),
+      child: Scaffold(
+        appBar: AppBar(
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text(widget.title),
+        ),
+        body: Center(
+          // Center is a layout widget. It takes a single child and positions it
+          // in the middle of the parent.
+          child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(16.0),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(16.0),
-              ),
-              Column(
-                children: <Widget>[
-                  Text("RotateX: "),
-                  Slider(
-                    value: valueSlider1,
-                    max: 1000,
-                    divisions: 1000,
-                    label: valueSlider1.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
-                        valueSlider1 = value;
-                      });
-                    },
+                Container(
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(color: Colors.white),
+                  child:Transform(
+                    alignment: Alignment.topRight,
+                    transform: Matrix4.identity()
+                      ..rotateX(oldvalueSlider1)
+                      ..rotateY(oldvalueSlider2)
+                      ..scale(oldvalueSlider3/100),
+                    child: Image(image: NetworkImage('../images/parliamentMothershipConnection.jpg')),
                   ),
-                  Text("RotateY: "),
-                  Slider(
-                    value: valueSlider2,
-                    max: 1000,
-                    divisions: 1000,
-                    label: valueSlider2.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
-                        valueSlider2 = value;
-                      });
-                    },
-                  ),
-                  Text("Scale: "),
-                  Slider(
-                    value: valueSlider3,
-                    max: 1000,
-                    divisions: 1000,
-                    label: valueSlider3.round().toString(),
-                    onChanged: (double value) {
-                      setState(() {
-                        valueSlider3 = value;
-                      });
-                    },
-                  ),
-                ],
-              )
-            ],
+                ),
+                Padding(
+                  padding: EdgeInsets.all(16.0),
+                ),
+                MyColumnOfSliders(),
+              ],
+            ),
+        ),
+        floatingActionButton: MyAnimateButton(),
+      )
+    );
+  }
+}
+
+class MyColumnOfSliders extends StatefulWidget{
+  @override
+  createState() => _MyColumnOfSlidersState();
+}
+class _MyColumnOfSlidersState extends State<MyColumnOfSliders>{
+  @override
+  Widget build(BuildContext context){
+    return Consumer<animationButtonChange>(
+      builder: (context, provAnimation, _) => Column(
+        children: <Widget>[
+          Text("RotateX: "),
+          Slider(
+            value: provAnimation.valueSlider1,
+            max: 1000,
+            divisions: 1000,
+            label: provAnimation.valueSlider1.round().toString(),
+            onChanged: (double value) {
+              setState(() {
+                provAnimation.valueSlider1 = value;
+              });
+            },
           ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            valueSlider1 = 100;
-          });
-        },
-        backgroundColor: Colors.green,
-        child: Icon(Icons.not_started_outlined),
+          Text("RotateY: "),
+          Slider(
+            value: provAnimation.valueSlider2,
+            max: 1000,
+            divisions: 1000,
+            label: provAnimation.valueSlider2.round().toString(),
+            onChanged: (double value) {
+              setState(() {
+                provAnimation.valueSlider2 = value;
+              });
+            },
+          ),
+          Text("Scale: "),
+          Slider(
+            value: provAnimation.valueSlider3,
+            max: 1000,
+            divisions: 1000,
+            label: provAnimation.valueSlider3.round().toString(),
+            onChanged: (double value) {
+              setState(() {
+                provAnimation.valueSlider3 = value;
+              });
+            },
+          ),
+        ],
       ),
     );
+    
+  }
+}
+
+class MyAnimateButton extends StatefulWidget{
+  @override
+  createState() => _MyAnimateButtonState();
+}
+
+
+class _MyAnimateButtonState extends State<MyAnimateButton>{
+  @override
+  Widget build(BuildContext context){
+    final provAnimation = Provider.of<animationButtonChange>(context);
+    Duration oneMiliSec = Duration(milliseconds: 50);
+    return FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                Timer.periodic(oneMiliSec, (Timer t){
+                  if(provAnimation.valueSlider1 <900){
+                    provAnimation.valueSlider1 = provAnimation.valueSlider1 + 10;
+                  }
+                  if(provAnimation.valueSlider2 <900){
+                    provAnimation.valueSlider2 = provAnimation.valueSlider2 + 10;
+                  }
+                  if(provAnimation.valueSlider3 <900){
+                    provAnimation.valueSlider3 = provAnimation.valueSlider3 + 10;
+                  }
+                  
+                  //valueSlider3 += 10;
+                  //print("Hi!");
+                });
+              });
+            },
+            backgroundColor: Colors.green,
+            child: Icon(Icons.not_started_outlined),
+          );
   }
 }
