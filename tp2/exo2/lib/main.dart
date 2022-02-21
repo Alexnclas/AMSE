@@ -42,11 +42,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  double oldvalueSlider1 = 20;
-  double oldvalueSlider2 = 20;
-  double oldvalueSlider3 = 20;
-  int _counter = 0;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -72,18 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Padding(
                   padding: EdgeInsets.all(16.0),
                 ),
-                Container(
-                  clipBehavior: Clip.hardEdge,
-                  decoration: BoxDecoration(color: Colors.white),
-                  child:Transform(
-                    alignment: Alignment.topRight,
-                    transform: Matrix4.identity()
-                      ..rotateX(oldvalueSlider1)
-                      ..rotateY(oldvalueSlider2)
-                      ..scale(oldvalueSlider3/100),
-                    child: Image(image: NetworkImage('../images/parliamentMothershipConnection.jpg')),
-                  ),
-                ),
+                MyChangingImage(),
                 Padding(
                   padding: EdgeInsets.all(16.0),
                 ),
@@ -93,6 +77,31 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         floatingActionButton: MyAnimateButton(),
       )
+    );
+  }
+}
+
+class MyChangingImage extends StatefulWidget{
+  @override
+  createState() => _MyChangingImageState();
+}
+
+class _MyChangingImageState extends State<MyChangingImage>{
+  @override
+  Widget build(BuildContext context){
+    return Consumer<animationButtonChange>(
+      builder: (context, provAnimation, _) => Container(
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(color: Colors.white),
+        child:Transform(
+          alignment: Alignment.topRight,
+          transform: Matrix4.identity()
+            ..rotateX(3.1415 / (provAnimation.valueSlider1/100))
+            ..rotateY(3.1415 / (provAnimation.valueSlider2/100))
+            ..scale(provAnimation.valueSlider3/250),
+          child: Image(image: NetworkImage('../images/parliamentMothershipConnection.jpg')),
+        ),
+      ),
     );
   }
 }
@@ -134,8 +143,9 @@ class _MyColumnOfSlidersState extends State<MyColumnOfSliders>{
           Text("Scale: "),
           Slider(
             value: provAnimation.valueSlider3,
+            min: 1,
             max: 1000,
-            divisions: 1000,
+            divisions: 1002,
             label: provAnimation.valueSlider3.round().toString(),
             onChanged: (double value) {
               setState(() {
@@ -163,21 +173,39 @@ class _MyAnimateButtonState extends State<MyAnimateButton>{
     Duration oneMiliSec = Duration(milliseconds: 50);
     return FloatingActionButton(
             onPressed: () {
+              if(provAnimation.goOn){
+                provAnimation.goOn = false;
+              }
+              else{
+                provAnimation.goOn = true;
+              }
               setState(() {
                 Timer.periodic(oneMiliSec, (Timer t){
-                  if(provAnimation.valueSlider1 <900){
-                    provAnimation.valueSlider1 = provAnimation.valueSlider1 + 10;
+                  if(provAnimation.goOn){
+                    if(provAnimation.valueSlider1 > 990){
+                    provAnimation.valueSlider1 = 0;
+                    }
+                    else{
+                      provAnimation.valueSlider1 = provAnimation.valueSlider1 + 10;
+                    }
+                    if(provAnimation.valueSlider2 < 9){
+                      provAnimation.valueSlider2 = 1000;
+                    }
+                    else{
+                      provAnimation.valueSlider2 = provAnimation.valueSlider2 - 9;
+                    }
+                    if(provAnimation.valueSlider3 > 990){
+                      provAnimation.valueSlider3 = 250;
+                    }
+                    else{
+                      provAnimation.valueSlider3 = provAnimation.valueSlider3 + 7;
+                    }
                   }
-                  if(provAnimation.valueSlider2 <900){
-                    provAnimation.valueSlider2 = provAnimation.valueSlider2 + 10;
+                  else{
+                    t.cancel();
                   }
-                  if(provAnimation.valueSlider3 <900){
-                    provAnimation.valueSlider3 = provAnimation.valueSlider3 + 10;
-                  }
-                  
-                  //valueSlider3 += 10;
-                  //print("Hi!");
-                });
+                }
+                );
               });
             },
             backgroundColor: Colors.green,
