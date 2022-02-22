@@ -30,3 +30,12 @@ class animationButtonChange extends ChangeNotifier {
     notifyListeners();
     }
 }
+
+class sliderDiviserChange extends ChangeNotifier{
+    double _valueSlider = 2.0;
+    double get valueSlider => _valueSlider;
+    set valueSlider(double newValue){
+        _valueSlider = newValue;
+        notifyListeners();
+    }
+}

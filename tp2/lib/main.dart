@@ -28,6 +28,7 @@ class ListeExos extends StatelessWidget {
           Exo4(),
           Exo5a(),
           Exo5b(),
+          Exo5c(),
         ],
       )
     );
@@ -315,7 +316,6 @@ class Exo5a extends StatelessWidget {
     }
 }
 
-//../images/parliamentMothershipConnection.jpg
 class Exo5b extends StatelessWidget {
   const Exo5b({Key? key}) : super(key: key);
   @override
@@ -486,7 +486,61 @@ class Exo5b extends StatelessWidget {
     }
 }
 
-
+//../images/parliamentMothershipConnection.jpg
+class Exo5c extends StatelessWidget {
+  const Exo5c({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Card(
+              clipBehavior: Clip.antiAlias,
+              child: GestureDetector(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context){
+                        //CONTENU EXERCICE
+                        return ChangeNotifierProvider(
+                          create: (context) => sliderDiviserChange(),
+                          child: Scaffold(
+                            appBar: AppBar(
+                              title: Text("Exercice 5c: Grille configuration taille (Image)"),
+                            ),
+                            body: Center(
+                              child: Column(
+                                children:[
+                                  MyDivisibleImage(),
+                                  MyDividingSlider(),    
+                                ],
+                              ),
+                          ),
+                          ),
+                        );
+                      }
+                    )
+                  );
+                },
+                //FIN CONTENU EXERCICE
+                //CONTENU CARTE LISTE EXERCICE
+                child: ListTile(
+                  title: Text("Exercice 5c"),
+                  subtitle: Text(
+                    "Grille configuration taille (Image)",
+                    style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward,
+                    color: Colors.blue,
+                    semanticLabel: "Lancer l'exercice",
+                  ),
+                ),
+              ),
+            ),
+          );
+    }
+}
 
 
 //CLASSES EXERCICE 2
@@ -626,7 +680,86 @@ class _MyAnimateButtonState extends State<MyAnimateButton>{
 
 
 
+//CLASSES EXERCICE 5c
+
+class MyDividingSlider extends StatefulWidget{
+  @override
+  createState() => _MyDividingSliderState();
+}
 
 
-//CLASSES EXERCICE 4
-/*  */
+class _MyDividingSliderState extends State<MyDividingSlider>{
+  @override
+  Widget build(BuildContext context){
+    final provDiv = Provider.of<sliderDiviserChange>(context);
+    return  Slider(
+            value: provDiv.valueSlider,
+            max: 10,
+            divisions: 10,
+            label: provDiv.valueSlider.round().toString(),
+            onChanged: (double value) {
+              setState(() {
+                provDiv.valueSlider = value;
+              });
+            },
+          );
+  }
+}
+
+
+class MyDivisibleImage extends StatefulWidget{
+  @override
+  createState() => _MyDivisibleImageState();
+}
+
+class _MyDivisibleImageState extends State<MyDivisibleImage>{
+  @override
+  Widget build(BuildContext context){
+    return Consumer<sliderDiviserChange>(
+      builder: (context, provDiv, _) => Flexible(
+        child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: provDiv.valueSlider.round(),
+          ),
+          itemCount: provDiv.valueSlider.round() * provDiv.valueSlider.round(),
+          itemBuilder: (BuildContext context, int index) {
+            return FittedBox(
+              fit: BoxFit.fill,
+              child: ClipRect(
+                child: Container(
+                  child: Align(
+                    alignment: Alignment(-1,-1),        //COMMENT TROUVER ALIGNEMENT
+                    widthFactor: 0.3,
+                    heightFactor: 0.3,
+                    child: Image.network('../images/parliamentMothershipConnection.jpg'),
+                  ),
+                ),
+              ),
+            );
+          }
+        ),
+      )
+    );
+  }
+}
+
+/*
+Card(
+              color: Colors.amber,
+              child: Center(child: Text('$index')),
+            )
+*/
+/*
+GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+      ),
+      itemCount: 300,
+      itemBuilder: (BuildContext context, int index) {
+        return Card(
+          color: Colors.amber,
+          child: Center(child: Text('$index')),
+        );
+      }
+    )
+*/
