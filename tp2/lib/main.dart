@@ -26,6 +26,7 @@ class ListeExos extends StatelessWidget {
           Exo1(),
           Exo2(),
           Exo4(),
+          Exo5a(),
         ],
       )
     );
@@ -207,7 +208,112 @@ class Exo4 extends StatelessWidget {//Exercice 1
 
 
 
-
+class Exo5a extends StatelessWidget {//Exercice 1
+  const Exo5a({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Card(
+              clipBehavior: Clip.antiAlias,
+              child: GestureDetector(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context){
+                        //CONTENU EXERCICE
+                        return Scaffold(
+                          appBar: AppBar(
+                            title: Text("Exercice 5a: Grille"),
+                          ),
+                          body: Center(
+                            child: GridView.count(
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              crossAxisCount: 3,
+                              children:[
+                                Container(
+                                  alignment: Alignment.center,
+                                  margin: const EdgeInsets.all(10.0),
+                                  color:Colors.amber[100],
+                                  child:Text("Tile 1")
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  margin: const EdgeInsets.all(10.0),
+                                  color:Colors.amber[200],
+                                  child:Text("Tile 2")
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  margin: const EdgeInsets.all(10.0),
+                                  color:Colors.amber[300],
+                                  child:Text("Tile 3")
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  margin: const EdgeInsets.all(10.0),
+                                  color:Colors.amber[400],
+                                  child:Text("Tile 4")
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  margin: const EdgeInsets.all(10.0),
+                                  color:Colors.amber[500],
+                                  child:Text("Tile 5")
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  margin: const EdgeInsets.all(10.0),
+                                  color:Colors.amber[400],
+                                  child:Text("Tile 6")
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  margin: const EdgeInsets.all(10.0),
+                                  color:Colors.amber[300],
+                                  child:Text("Tile 7")
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  margin: const EdgeInsets.all(10.0),
+                                  color:Colors.amber[200],
+                                  child:Text("Tile 8")
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  margin: const EdgeInsets.all(10.0),
+                                  color:Colors.amber[100],
+                                  child:Text("Tile 9")
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                    )
+                  );
+                },
+                //FIN CONTENU EXERCICE
+                //CONTENU CARTE LISTE EXERCICE
+                child: ListTile(
+                  title: Text("Exercice 5a"),
+                  subtitle: Text(
+                    "Génération d'un plateau de tuiles",
+                    style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward,
+                    color: Colors.blue,
+                    semanticLabel: "Lancer l'exercice",
+                  ),
+                ),
+              ),
+            ),
+          );
+    }
+}
 
 
 
