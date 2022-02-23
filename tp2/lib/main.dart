@@ -694,6 +694,7 @@ class _MyDividingSliderState extends State<MyDividingSlider>{
     final provDiv = Provider.of<sliderDiviserChange>(context);
     return  Slider(
             value: provDiv.valueSlider,
+            min:2,
             max: 10,
             divisions: 10,
             label: provDiv.valueSlider.round().toString(),
@@ -717,32 +718,65 @@ class _MyDivisibleImageState extends State<MyDivisibleImage>{
   Widget build(BuildContext context){
     return Consumer<sliderDiviserChange>(
       builder: (context, provDiv, _) => Flexible(
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: provDiv.valueSlider.round(),
-          ),
-          itemCount: provDiv.valueSlider.round() * provDiv.valueSlider.round(),
-          itemBuilder: (BuildContext context, int index) {
-            return FittedBox(
-              fit: BoxFit.fill,
-              child: ClipRect(
-                child: Container(
-                  child: Align(
-                    alignment: Alignment(-1,-1),        //COMMENT TROUVER ALIGNEMENT
-                    widthFactor: 0.3,
-                    heightFactor: 0.3,
-                    child: Image.network('../images/parliamentMothershipConnection.jpg'),
+        child: GridView.count(
+          crossAxisSpacing: 0,
+          mainAxisSpacing: 0,
+          crossAxisCount: provDiv.valueSlider.round(),
+          children:[
+            for (var j = 0; j < provDiv.valueSlider.round(); j++)
+              for (var i = 0; i < provDiv.valueSlider.round(); i++)
+                FittedBox(
+                  fit: BoxFit.fill,
+                  child: ClipRect(
+                    child: Container(
+                      child: Align(
+                        alignment: Alignment(-1 + (2*i)/(provDiv.valueSlider.round() - 1), -1 + (2*j)/(provDiv.valueSlider.round() - 1)),        //COMMENT TROUVER ALIGNEMENT
+                        widthFactor: 1/provDiv.valueSlider.round(),
+                        heightFactor: 1/provDiv.valueSlider.round(),
+                        child: Image.network('../images/parliamentMothershipConnection.jpg'),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            );
-          }
+                )
+          ],
         ),
       )
     );
   }
 }
+/*
+FittedBox(
+              fit: BoxFit.fill,
+              child: ClipRect(
+                child: Container(
+                  child: Align(
+                    alignment: Alignment((-1+2*index/(provDiv.valueSlider.round() - 1)), -1),        //COMMENT TROUVER ALIGNEMENT
+                    widthFactor: 1/provDiv.valueSlider.round(),
+                    heightFactor: 1/provDiv.valueSlider.round(),
+                    child: Image.network('../images/parliamentMothershipConnection.jpg'),
+                  ),
+                ),
+              ),
+            )
 
+*/
+/*
+FittedBox(
+              fit: BoxFit.fill,
+              child: ClipRect(
+                child: Container(
+                  child: Align(
+                    alignment: Alignment(-1, -1),        //COMMENT TROUVER ALIGNEMENT
+                    widthFactor: 1/provDiv.valueSlider.round(),
+                    heightFactor: 1/provDiv.valueSlider.round(),
+                    child: Image.network('../images/parliamentMothershipConnection.jpg'),
+                  ),
+                ),
+              ),
+            )
+
+
+*/
 /*
 Card(
               color: Colors.amber,
