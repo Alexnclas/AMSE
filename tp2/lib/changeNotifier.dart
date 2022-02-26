@@ -47,6 +47,7 @@ class sliderDiviserChange extends ChangeNotifier{
 
 class tileChangeNotifier extends ChangeNotifier{
     double _valueSlider = 3.0;
+    int _movableTileIndex = 5;
     List<Tile> _tiles = [
         Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 1/3),
         Tile('../images/parliamentMothershipConnection.jpg', Alignment(0, -1), 1/3),
@@ -69,6 +70,12 @@ class tileChangeNotifier extends ChangeNotifier{
     double get valueSlider => _valueSlider;
     set valueSlider(double newValue){
         _valueSlider = newValue;
+        notifyListeners();
+    }
+    
+    int get movableTileIndex => _movableTileIndex;
+    set movableTileIndex(int newValue){
+        _movableTileIndex = newValue;
         notifyListeners();
     }
 }

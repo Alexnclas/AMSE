@@ -830,7 +830,30 @@ class _MyDivisibleImageV2State extends State<MyDivisibleImageV2>{
           children: [
             for (var j = 0; j < provTile.valueSlider.round(); j++)
               for (var i = 0; i < provTile.valueSlider.round(); i++)
-                TileWidget(provTile.tiles[i+j*provTile.valueSlider.round()]),
+                //AJOUTER UN GESTURE SENSOR
+                GestureDetector(
+                  onTap: (){
+                    setState((){
+                    // CAS GENERAL
+                      if(i+j*provTile.valueSlider.round() > provTile.movableTileIndex){
+                        //Cible après la case vide
+                        provTile.tiles.insert(i+j*provTile.valueSlider.round(), provTile.tiles[provTile.movableTileIndex]);
+                        provTile.tiles.removeAt(provTile.movableTileIndex);
+                        provTile.tiles.insert(provTile.movableTileIndex, provTile.tiles[i+j*provTile.valueSlider.round()]);
+                        provTile.tiles.removeAt(i+j*provTile.valueSlider.round() + 1);
+                      }
+                      else if(i+j*provTile.valueSlider.round() < provTile.movableTileIndex){
+                        //Cible avant la case vide
+                        provTile.tiles.insert(i+j*provTile.valueSlider.round(), provTile.tiles[provTile.movableTileIndex]);
+                        provTile.tiles.removeAt(provTile.movableTileIndex + 1);
+                        provTile.tiles.insert(provTile.movableTileIndex, provTile.tiles[i+j*provTile.valueSlider.round() + 1]);
+                        provTile.tiles.removeAt(i+j*provTile.valueSlider.round() + 1);
+                      }
+                      provTile.movableTileIndex = i+j*provTile.valueSlider.round();
+                    });
+                  },
+                  child: TileWidget(provTile.tiles[i+j*provTile.valueSlider.round()]),
+                  )
           ],
         ),
       )
@@ -857,7 +880,7 @@ class _MyDividingSliderV2State extends State<MyDividingSliderV2>{
             onChanged: (double value) {
               setState(() {
                 provTile.valueSlider = value;
-                //CHANGEMENT DES TILES
+                //RELOAD COMPLET DES TILES
                 provTile.tiles = [];
                 for (var j = 0; j < provTile.valueSlider.round(); j++)
                   for (var i = 0; i < provTile.valueSlider.round(); i++)
@@ -870,3 +893,6 @@ class _MyDividingSliderV2State extends State<MyDividingSliderV2>{
 
 // Possibilité de changer le nombre de tiles en fonction du slider (changeNotifier)
 // et de changer les positions des différentes tiles (Gestion de la list dans le change notifier)
+
+
+
