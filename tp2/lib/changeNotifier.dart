@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:tp2/tile.dart';
+import 'package:flutter/material.dart';
 
 //Change notifier
 class animationButtonChange extends ChangeNotifier {
@@ -33,6 +35,37 @@ class animationButtonChange extends ChangeNotifier {
 
 class sliderDiviserChange extends ChangeNotifier{
     double _valueSlider = 2.0;
+    double get valueSlider => _valueSlider;
+    set valueSlider(double newValue){
+        _valueSlider = newValue;
+        notifyListeners();
+    }
+}
+
+
+
+
+class tileChangeNotifier extends ChangeNotifier{
+    double _valueSlider = 3.0;
+    List<Tile> _tiles = [
+        Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 1/3),
+        Tile('../images/parliamentMothershipConnection.jpg', Alignment(0, -1), 1/3),
+        Tile('../images/parliamentMothershipConnection.jpg', Alignment(1, -1), 1/3),
+        Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, 0), 1/3),
+        Tile('../images/parliamentMothershipConnection.jpg', Alignment(0, 0), 1/3),
+        Tile('../images/parliamentMothershipConnection.jpg', Alignment(1, 0), 1/3),
+        Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, 1), 1/3),
+        Tile('../images/parliamentMothershipConnection.jpg', Alignment(0, 1), 1/3),
+        Tile('../images/parliamentMothershipConnection.jpg', Alignment(1, 1), 1/3),
+    ];
+
+    List<Tile> get tiles => _tiles;
+
+    set tiles(List<Tile> newTiles){
+       _tiles = newTiles; 
+        notifyListeners();
+    }
+
     double get valueSlider => _valueSlider;
     set valueSlider(double newValue){
         _valueSlider = newValue;

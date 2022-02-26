@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:tp2/changeNotifier.dart';
+import 'package:tp2/tile.dart';
 import 'package:provider/provider.dart';
 
 
@@ -21,7 +22,7 @@ class ListeExos extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Liste des exercices'),
       ),
-      body:Column(
+      body:ListView(
         children: [
           Exo1(),
           Exo2(),
@@ -29,6 +30,7 @@ class ListeExos extends StatelessWidget {
           Exo5a(),
           Exo5b(),
           Exo5c(),
+          Exo6a(),
         ],
       )
     );
@@ -542,7 +544,60 @@ class Exo5c extends StatelessWidget {
     }
 }
 
-
+class Exo6a extends StatelessWidget {
+  const Exo6a({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Card(
+              clipBehavior: Clip.antiAlias,
+              child: GestureDetector(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context){
+                        //CONTENU EXERCICE
+                        return ChangeNotifierProvider(
+                          create: (context) => tileChangeNotifier(),
+                          child: Scaffold(
+                            appBar: AppBar(
+                              title: Text("Exercice 6a: Animation tiles"),
+                            ),
+                            body: Center(
+                              child: Column(
+                                children:[
+                                  MyDivisibleImageV2(),    
+                                  MyDividingSliderV2(),
+                                ],
+                              ),
+                          ),
+                          ),
+                        );
+                      }
+                    )
+                  );
+                },
+                //FIN CONTENU EXERCICE
+                //CONTENU CARTE LISTE EXERCICE
+                child: ListTile(
+                  title: Text("Exercice 6a"),
+                  subtitle: Text(
+                    "Animations tiles",
+                    style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward,
+                    color: Colors.blue,
+                    semanticLabel: "Lancer l'exercice",
+                  ),
+                ),
+              ),
+            ),
+          );
+    }
+}
 //CLASSES EXERCICE 2
 
 class MyChangingImage extends StatefulWidget{
@@ -719,8 +774,8 @@ class _MyDivisibleImageState extends State<MyDivisibleImage>{
     return Consumer<sliderDiviserChange>(
       builder: (context, provDiv, _) => Flexible(
         child: GridView.count(
-          crossAxisSpacing: 0,
-          mainAxisSpacing: 0,
+          crossAxisSpacing: 1,
+          mainAxisSpacing: 1,
           crossAxisCount: provDiv.valueSlider.round(),
           children:[
             for (var j = 0; j < provDiv.valueSlider.round(); j++)
@@ -744,56 +799,74 @@ class _MyDivisibleImageState extends State<MyDivisibleImage>{
     );
   }
 }
-/*
-FittedBox(
-              fit: BoxFit.fill,
-              child: ClipRect(
-                child: Container(
-                  child: Align(
-                    alignment: Alignment((-1+2*index/(provDiv.valueSlider.round() - 1)), -1),        //COMMENT TROUVER ALIGNEMENT
-                    widthFactor: 1/provDiv.valueSlider.round(),
-                    heightFactor: 1/provDiv.valueSlider.round(),
-                    child: Image.network('../images/parliamentMothershipConnection.jpg'),
-                  ),
-                ),
-              ),
-            )
-
-*/
-/*
-FittedBox(
-              fit: BoxFit.fill,
-              child: ClipRect(
-                child: Container(
-                  child: Align(
-                    alignment: Alignment(-1, -1),        //COMMENT TROUVER ALIGNEMENT
-                    widthFactor: 1/provDiv.valueSlider.round(),
-                    heightFactor: 1/provDiv.valueSlider.round(),
-                    child: Image.network('../images/parliamentMothershipConnection.jpg'),
-                  ),
-                ),
-              ),
-            )
 
 
-*/
-/*
-Card(
-              color: Colors.amber,
-              child: Center(child: Text('$index')),
-            )
-*/
-/*
-GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-      ),
-      itemCount: 300,
-      itemBuilder: (BuildContext context, int index) {
-        return Card(
-          color: Colors.amber,
-          child: Center(child: Text('$index')),
-        );
-      }
-    )
-*/
+
+
+
+class MyDivisibleImageV2 extends StatefulWidget{
+  @override
+  createState() => _MyDivisibleImageV2State();
+}
+
+class _MyDivisibleImageV2State extends State<MyDivisibleImageV2>{
+  List<TileWidget> tilesTest= [TileWidget(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 0.25)),
+   TileWidget(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 0.25)),
+   TileWidget(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 0.25)),
+   TileWidget(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 0.25)),
+   TileWidget(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 0.25)),
+   TileWidget(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 0.25)),
+   TileWidget(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 0.25)),
+  ];
+  // GameBoard gameBoard = GameBoard(tilesTest);
+  @override
+  Widget build(BuildContext context){
+    return Consumer<tileChangeNotifier>(
+      builder: (context, provTile, _) => Flexible(
+        child: GridView.count(
+          crossAxisSpacing: 1,
+          mainAxisSpacing: 1,
+          crossAxisCount: provTile.valueSlider.round(), //Slider VALUE
+          children: [
+            for (var j = 0; j < provTile.valueSlider.round(); j++)
+              for (var i = 0; i < provTile.valueSlider.round(); i++)
+                TileWidget(provTile.tiles[i+j*provTile.valueSlider.round()]),
+          ],
+        ),
+      )
+    );
+  }
+}
+
+class MyDividingSliderV2 extends StatefulWidget{
+  @override
+  createState() => _MyDividingSliderV2State();
+}
+
+
+class _MyDividingSliderV2State extends State<MyDividingSliderV2>{
+  @override
+  Widget build(BuildContext context){
+    final provTile = Provider.of<tileChangeNotifier>(context);
+    return  Slider(
+            value: provTile.valueSlider,
+            min:2,
+            max: 10,
+            divisions: 10,
+            label: provTile.valueSlider.round().toString(),
+            onChanged: (double value) {
+              setState(() {
+                provTile.valueSlider = value;
+                //CHANGEMENT DES TILES
+                provTile.tiles = [];
+                for (var j = 0; j < provTile.valueSlider.round(); j++)
+                  for (var i = 0; i < provTile.valueSlider.round(); i++)
+                    provTile.tiles.add(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1 + (2*i)/(provTile.valueSlider.round() - 1), -1 + (2*j)/(provTile.valueSlider.round() - 1)), 1/provTile.valueSlider.round()));
+              });
+            },
+          );
+  }
+}
+
+// Possibilité de changer le nombre de tiles en fonction du slider (changeNotifier)
+// et de changer les positions des différentes tiles (Gestion de la list dans le change notifier)
