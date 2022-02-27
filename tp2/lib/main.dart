@@ -834,8 +834,9 @@ class _MyDivisibleImageV2State extends State<MyDivisibleImageV2>{
                 GestureDetector(
                   onTap: (){
                     setState((){
-                    // CAS GENERAL
-                      if(i+j*provTile.valueSlider.round() > provTile.movableTileIndex){
+                      if( (i+j*provTile.valueSlider.round() + 1 == provTile.movableTileIndex) || (i+j*provTile.valueSlider.round() - 1 == provTile.movableTileIndex) || (i+j*provTile.valueSlider.round() + provTile.valueSlider.round() == provTile.movableTileIndex) || (i+j*provTile.valueSlider.round() - provTile.valueSlider.round() == provTile.movableTileIndex)){
+                        //Movement autorisé
+                        if(i+j*provTile.valueSlider.round() > provTile.movableTileIndex){
                         //Cible après la case vide
                         provTile.tiles.insert(i+j*provTile.valueSlider.round(), provTile.tiles[provTile.movableTileIndex]);
                         provTile.tiles.removeAt(provTile.movableTileIndex);
@@ -846,10 +847,18 @@ class _MyDivisibleImageV2State extends State<MyDivisibleImageV2>{
                         //Cible avant la case vide
                         provTile.tiles.insert(i+j*provTile.valueSlider.round(), provTile.tiles[provTile.movableTileIndex]);
                         provTile.tiles.removeAt(provTile.movableTileIndex + 1);
-                        provTile.tiles.insert(provTile.movableTileIndex, provTile.tiles[i+j*provTile.valueSlider.round() + 1]);
+                        if(provTile.movableTileIndex- provTile.valueSlider.round() == i+j*provTile.valueSlider.round()){
+                          //Deplacement vers le haut
+                          provTile.tiles.insert(provTile.movableTileIndex + 1, provTile.tiles[i+j*provTile.valueSlider.round() + 1]);
+                        }
+                        else{
+                          provTile.tiles.insert(provTile.movableTileIndex, provTile.tiles[i+j*provTile.valueSlider.round() + 1]);
+                        }
                         provTile.tiles.removeAt(i+j*provTile.valueSlider.round() + 1);
                       }
                       provTile.movableTileIndex = i+j*provTile.valueSlider.round();
+                      }
+                      
                     });
                   },
                   child: TileWidget(provTile.tiles[i+j*provTile.valueSlider.round()]),
