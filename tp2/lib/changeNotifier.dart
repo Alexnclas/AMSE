@@ -58,19 +58,6 @@ class tileChangeNotifier extends ChangeNotifier{
         [Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, 0), 1/3, false, true),Tile('../images/parliamentMothershipConnection.jpg', Alignment(0, 0), 1/3, false, false),Tile('../images/parliamentMothershipConnection.jpg', Alignment(1, 0), 1/3, false, false)],
         [Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, 1), 1/3, false, false),Tile('../images/parliamentMothershipConnection.jpg', Alignment(0, 1), 1/3, false, false),Tile('../images/parliamentMothershipConnection.jpg', Alignment(1, 1), 1/3, false, false)],
 ];
-   // List<List<Tile>> _tiles = [[]];
-        
-    // List<Tile> _tiles = [
-    //     Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 1/3, false),
-    //     Tile('../images/parliamentMothershipConnection.jpg', Alignment(0, -1), 1/3, false),
-    //     Tile('../images/parliamentMothershipConnection.jpg', Alignment(1, -1), 1/3, false),
-    //     Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, 0), 1/3, false),
-    //     Tile('../images/parliamentMothershipConnection.jpg', Alignment(0, 0), 1/3, false),
-    //     Tile('../images/parliamentMothershipConnection.jpg', Alignment(1, 0), 1/3, true),
-    //     Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, 1), 1/3, false),
-    //     Tile('../images/parliamentMothershipConnection.jpg', Alignment(0, 1), 1/3, false),
-    //     Tile('../images/parliamentMothershipConnection.jpg', Alignment(1, 1), 1/3, false),
-    // ];
 
     void resetTiles(String imgSrc, int nbRows, int nbCols) {  
         this.tiles = [[]];
@@ -81,8 +68,6 @@ class tileChangeNotifier extends ChangeNotifier{
         this.imgSrc = imgSrc;
         
         this.updateTiles();
-        //METTRE LES ADJACENTES
-        //SET LES ALIGNEMENTS
         //SCRAMBLE
     }
 
@@ -97,7 +82,6 @@ class tileChangeNotifier extends ChangeNotifier{
     }
 
     void updateTargetAndTargetable(){
-        print("UPDATE");
         //RESET DES TARGETS
         for (int r = 0; r < this.nbRows; r = r + 1) { 
             for (int c = 0; c < this.nbCols; c = c + 1) { 
@@ -140,26 +124,22 @@ class tileChangeNotifier extends ChangeNotifier{
 
     void swapTiles(int rowIndexToSwapTo, int colIndexToSwapTo){
         Tile t1 = this.tiles[rowIndexToSwapTo][colIndexToSwapTo];
-        Tile t2 = this.tiles[this.indexRowTargeted][this.indexColTargeted];
+        if(t1.isTargetable){
+            Tile t2 = this.tiles[this.indexRowTargeted][this.indexColTargeted];
 
-        this.tiles[rowIndexToSwapTo].removeAt(colIndexToSwapTo);
-        this.tiles[rowIndexToSwapTo].insert(colIndexToSwapTo, t2);
 
-        this.tiles[this.indexRowTargeted].removeAt(this.indexColTargeted);
-        this.tiles[this.indexRowTargeted].insert(this.indexColTargeted, t1);
+            this.tiles[rowIndexToSwapTo].removeAt(colIndexToSwapTo);
+            this.tiles[rowIndexToSwapTo].insert(colIndexToSwapTo, t2);
 
-        this.indexRowTargeted = rowIndexToSwapTo;
-        this.indexColTargeted = colIndexToSwapTo;
+            this.tiles[this.indexRowTargeted].removeAt(this.indexColTargeted);
+            this.tiles[this.indexRowTargeted].insert(this.indexColTargeted, t1);
 
-        this.updateTargetAndTargetable();
+            this.indexRowTargeted = rowIndexToSwapTo;
+            this.indexColTargeted = colIndexToSwapTo;
+
+            this.updateTargetAndTargetable();
+        }
     }
-
-    // List<Tile> get tiles => _tiles;
-
-    // set tiles(List<Tile> newTiles){
-    //    _tiles = newTiles; 
-    //     notifyListeners();
-    // }
 
     double get valueSlider => _valueSlider;
     set valueSlider(double newValue){
