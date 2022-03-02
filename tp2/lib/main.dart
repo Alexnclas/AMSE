@@ -810,15 +810,10 @@ class MyDivisibleImageV2 extends StatefulWidget{
 }
 
 class _MyDivisibleImageV2State extends State<MyDivisibleImageV2>{
-  List<TileWidget> tilesTest= [TileWidget(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 0.25)),
-   TileWidget(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 0.25)),
-   TileWidget(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 0.25)),
-   TileWidget(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 0.25)),
-   TileWidget(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 0.25)),
-   TileWidget(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 0.25)),
-   TileWidget(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 0.25)),
-  ];
-  // GameBoard gameBoard = GameBoard(tilesTest);
+  String imgSrc = '../images/parliamentMothershipConnection.jpg';
+
+
+
   @override
   Widget build(BuildContext context){
     return Consumer<tileChangeNotifier>(
@@ -828,41 +823,21 @@ class _MyDivisibleImageV2State extends State<MyDivisibleImageV2>{
           mainAxisSpacing: 1,
           crossAxisCount: provTile.valueSlider.round(), //Slider VALUE
           children: [
-            for (var j = 0; j < provTile.valueSlider.round(); j++)
-              for (var i = 0; i < provTile.valueSlider.round(); i++)
-                //AJOUTER UN GESTURE SENSOR
-                GestureDetector(
-                  onTap: (){
-                    setState((){
-                      if( (i+j*provTile.valueSlider.round() + 1 == provTile.movableTileIndex) || (i+j*provTile.valueSlider.round() - 1 == provTile.movableTileIndex) || (i+j*provTile.valueSlider.round() + provTile.valueSlider.round() == provTile.movableTileIndex) || (i+j*provTile.valueSlider.round() - provTile.valueSlider.round() == provTile.movableTileIndex)){
-                        //Movement autorisé
-                        if(i+j*provTile.valueSlider.round() > provTile.movableTileIndex){
-                        //Cible après la case vide
-                        provTile.tiles.insert(i+j*provTile.valueSlider.round(), provTile.tiles[provTile.movableTileIndex]);
-                        provTile.tiles.removeAt(provTile.movableTileIndex);
-                        provTile.tiles.insert(provTile.movableTileIndex, provTile.tiles[i+j*provTile.valueSlider.round()]);
-                        provTile.tiles.removeAt(i+j*provTile.valueSlider.round() + 1);
-                      }
-                      else if(i+j*provTile.valueSlider.round() < provTile.movableTileIndex){
-                        //Cible avant la case vide
-                        provTile.tiles.insert(i+j*provTile.valueSlider.round(), provTile.tiles[provTile.movableTileIndex]);
-                        provTile.tiles.removeAt(provTile.movableTileIndex + 1);
-                        if(provTile.movableTileIndex- provTile.valueSlider.round() == i+j*provTile.valueSlider.round()){
-                          //Deplacement vers le haut
-                          provTile.tiles.insert(provTile.movableTileIndex + 1, provTile.tiles[i+j*provTile.valueSlider.round() + 1]);
+              //DEPLACEMENT DES TILES
+             for (int r = 0; r < provTile.nbRows; r += 1)
+                for (int c = 0; c < provTile.nbCols; c += 1)   //ON CONSIDERE QUE TILES A LE MEME NOMBRE DE LIGNES ET DE COLONNES
+                  GestureDetector(
+                    onTap: (){
+                      setState((){
+                        print(provTile.tiles[r][c].isTargetable);
+                        if(provTile.tiles[r][c].isTargetable){
+                          print("Test");
+                          provTile.swapTiles(r, c);
                         }
-                        else{
-                          provTile.tiles.insert(provTile.movableTileIndex, provTile.tiles[i+j*provTile.valueSlider.round() + 1]);
-                        }
-                        provTile.tiles.removeAt(i+j*provTile.valueSlider.round() + 1);
-                      }
-                      provTile.movableTileIndex = i+j*provTile.valueSlider.round();
-                      }
-                      
-                    });
-                  },
-                  child: TileWidget(provTile.tiles[i+j*provTile.valueSlider.round()]),
-                  )
+                      });
+                    },
+                    child: TileWidget(provTile.tiles[r][c]),
+                    )
           ],
         ),
       )
@@ -877,6 +852,7 @@ class MyDividingSliderV2 extends StatefulWidget{
 
 
 class _MyDividingSliderV2State extends State<MyDividingSliderV2>{
+  String imgSrc = '../images/parliamentMothershipConnection.jpg';
   @override
   Widget build(BuildContext context){
     final provTile = Provider.of<tileChangeNotifier>(context);
@@ -889,11 +865,7 @@ class _MyDividingSliderV2State extends State<MyDividingSliderV2>{
             onChanged: (double value) {
               setState(() {
                 provTile.valueSlider = value;
-                //RELOAD COMPLET DES TILES
-                provTile.tiles = [];
-                for (var j = 0; j < provTile.valueSlider.round(); j++)
-                  for (var i = 0; i < provTile.valueSlider.round(); i++)
-                    provTile.tiles.add(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1 + (2*i)/(provTile.valueSlider.round() - 1), -1 + (2*j)/(provTile.valueSlider.round() - 1)), 1/provTile.valueSlider.round()));
+                provTile.resetTiles(imgSrc, provTile.valueSlider.round(), provTile.valueSlider.round());
               });
             },
           );
@@ -905,3 +877,65 @@ class _MyDividingSliderV2State extends State<MyDividingSliderV2>{
 
 
 
+
+
+
+
+//DANS LE GESTURE DETECTOR
+//FAIRE LE CAS DES DEPLACEMENTS INTERDITS SI LA TILE VIDE EST SUR i=0 ou i = slider - 1 
+                      //UPDATE LES CASES SELECTIONNABLES APRES LE SWAP: (Set .isTargetable = false pour toutes les cases, puis mettre les nécessaire à true (Code du slider))
+                      
+                      
+                      // if( (i+j*provTile.valueSlider.round() + 1 == provTile.movableTileIndex) || (i+j*provTile.valueSlider.round() - 1 == provTile.movableTileIndex) || (i+j*provTile.valueSlider.round() + provTile.valueSlider.round() == provTile.movableTileIndex) || (i+j*provTile.valueSlider.round() - provTile.valueSlider.round() == provTile.movableTileIndex)){
+                      // //CASE ADJACENTES A LA TILE VIDE
+                        
+                      //   if(i+j*provTile.valueSlider.round() > provTile.movableTileIndex){
+                      //     //Cible après la case vide
+                      //     provTile.tiles.insert(i+j*provTile.valueSlider.round(), provTile.tiles[provTile.movableTileIndex]);
+                      //     provTile.tiles.removeAt(provTile.movableTileIndex);
+                      //     provTile.tiles.insert(provTile.movableTileIndex, provTile.tiles[i+j*provTile.valueSlider.round()]);
+                      //     provTile.tiles.removeAt(i+j*provTile.valueSlider.round() + 1);
+                      //   }
+                      //   else if(i+j*provTile.valueSlider.round() < provTile.movableTileIndex){
+                      //     //Cible avant la case vide
+                      //     provTile.tiles.insert(i+j*provTile.valueSlider.round(), provTile.tiles[provTile.movableTileIndex]);
+                      //     provTile.tiles.removeAt(provTile.movableTileIndex + 1);
+                      //     if(provTile.movableTileIndex- provTile.valueSlider.round() == i+j*provTile.valueSlider.round()){
+                      //       //Deplacement vers le haut
+                      //       provTile.tiles.insert(provTile.movableTileIndex + 1, provTile.tiles[i+j*provTile.valueSlider.round() + 1]);
+                      //     }
+                      //     else{
+                      //       provTile.tiles.insert(provTile.movableTileIndex, provTile.tiles[i+j*provTile.valueSlider.round() + 1]);
+                      //     }
+                      //     provTile.tiles.removeAt(i+j*provTile.valueSlider.round() + 1);
+                      //   }
+                      //   provTile.movableTileIndex = i+j*provTile.valueSlider.round();
+                      // }
+
+
+
+
+
+// DANS LE SET STATE DE SLIDER
+
+
+                // provTile.valueSlider = value;
+                // //RELOAD COMPLET DES TILES
+                // provTile.tiles = [];
+
+                // for (var j = 0; j < provTile.valueSlider.round(); j++)
+                //   for (var i = 0; i < provTile.valueSlider.round(); i++)
+                //     if( (i+j*provTile.valueSlider.round() + 1 == provTile.movableTileIndex) || (i+j*provTile.valueSlider.round() - 1 == provTile.movableTileIndex) || (i+j*provTile.valueSlider.round() + provTile.valueSlider.round() == provTile.movableTileIndex) || (i+j*provTile.valueSlider.round() - provTile.valueSlider.round() == provTile.movableTileIndex)){
+                //       provTile.tiles.add(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1 + (2*i)/(provTile.valueSlider.round() - 1), -1 + (2*j)/(provTile.valueSlider.round() - 1)), 1/provTile.valueSlider.round(), true));
+                //     }
+                //     else{
+                //       provTile.tiles.add(Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1 + (2*i)/(provTile.valueSlider.round() - 1), -1 + (2*j)/(provTile.valueSlider.round() - 1)), 1/provTile.valueSlider.round(), false));
+                //     }
+                // if(provTile.movableTileIndex%provTile.valueSlider.round() == 0 && provTile.movableTileIndex != 0){
+                //   //Case vide sur la bordure gauche
+                //   provTile.tiles[provTile.movableTileIndex - 1].isTargetable = false;
+                // }
+                // else if(provTile.movableTileIndex%provTile.valueSlider.round() == (provTile.valueSlider.round() - 1) && provTile.movableTileIndex != (provTile.tiles.length - 1)){
+                //   //Case vide sur la bordure droite
+                //   provTile.tiles[provTile.movableTileIndex + 1].isTargetable = false;
+                // }

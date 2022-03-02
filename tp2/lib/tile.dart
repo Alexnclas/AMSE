@@ -9,8 +9,9 @@ class Tile {
   String imgSrc;
   Alignment alignment;
   double size;
-
-  Tile(this.imgSrc, this.alignment, this.size);
+  bool isTarget = false;  //CASE ACTUELLEMENT SELECTIONNEE
+  bool isTargetable = false; //CASE QUE L'ON PEUT SELECTIONNEE
+  Tile(this.imgSrc, this.alignment, this.size, this.isTarget, this.isTargetable);
   
 }
 
@@ -28,18 +29,57 @@ class TileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FittedBox(
-      fit: BoxFit.fill,
-      child: ClipRect(
-        child: Container(
-          child: Align(
-            alignment: this.tile.alignment,        
-            widthFactor: this.tile.size,
-            heightFactor: this.tile.size,
-            child: Image.network(this.tile.imgSrc),
+    if(tile.isTarget){
+      return Padding(
+        padding: EdgeInsets.all(5.0),
+        child: FittedBox(
+          fit: BoxFit.fill,
+          child: ClipRect(
+            child: Container(
+              child: Align(
+                alignment: this.tile.alignment,        
+                widthFactor: this.tile.size,
+                heightFactor: this.tile.size,
+                child: Image.network(this.tile.imgSrc),
+              ),
+            ),
           ),
         ),
-      ),
-    );
+      );
+    }
+    else if(tile.isTargetable){
+      return Padding(
+        padding: EdgeInsets.all(2.5),
+        child: FittedBox(
+          fit: BoxFit.fill,
+          child: ClipRect(
+            child: Container(
+              child: Align(
+                alignment: this.tile.alignment,        
+                widthFactor: this.tile.size,
+                heightFactor: this.tile.size,
+                child: Image.network(this.tile.imgSrc),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    else{
+      return FittedBox(
+          fit: BoxFit.fill,
+          child: ClipRect(
+            child: Container(
+              child: Align(
+                alignment: this.tile.alignment,        
+                widthFactor: this.tile.size,
+                heightFactor: this.tile.size,
+                child: Image.network(this.tile.imgSrc),
+              ),
+            ),
+          ),
+        );
+    }
   }
 }
