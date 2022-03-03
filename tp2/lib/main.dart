@@ -335,14 +335,3 @@ class _MyLastMoveButtonState extends State<MyLastMoveButton>{
           ): SizedBox.shrink();
   }
 }
-
-
-
-
-
-
-
-// (CHOIX IMAGE)
-
-// CLEAN UP CODE
-//GITHUB + README

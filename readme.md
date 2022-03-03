@@ -26,4 +26,14 @@ Si nécessaire, choisir l'application web parmi la liste proposée par le termin
 L'application devrait se lancer après une courte attente, je vous conseille d'utiliser le mode développeur de chrome (Click droit --> Inspecter l'élément --> Clicker sur l'icone de tablette/téléphone en haut à gauche de l'inspecteur) afin de voir l'application sur une émulation de téléphone car elle a été codée dans cet esprit là.
 
 ### TP2
-Work in progress ...
+Depuis le terminal, se rendre dans AMSE/tp1
+> cd AMSE/tp2
+
+
+Puis taper la commande suivante:
+> flutter run
+
+
+Si nécessaire, choisir l'application web parmi la liste proposée par le terminal (Chrome, Edge, ...)
+
+L'application devrait se lancer après une courte attente, je vous conseille d'utiliser le mode développeur de chrome (Click droit --> Inspecter l'élément --> Clicker sur l'icone de tablette/téléphone en haut à gauche de l'inspecteur) afin de voir l'application sur une émulation de téléphone car elle a été codée dans cet esprit là.
