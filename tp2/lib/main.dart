@@ -78,16 +78,18 @@ class Exo7 extends StatelessWidget {
                                   ),
                                   Column(
                                     children: [
-                                      Row(
-                                        children: [
-                                          MyMoveCounter(),
-                                          MyStartButton(),
-                                        ]
-                                      ),
+                                      MyStartButton(),
+                                      SizedBox(height: 10),
+                                      MyLastMoveButton(),
+                                      SizedBox(height: 10),
+                                      MyMoveCounter(),
+                                      SizedBox(height: 10),
                                       Text("Choix du nombre de divisions: "),
                                       MySizeSlider(),
+                                      SizedBox(height: 10),
                                       Text("Choix de la difficulté: "),
                                       MyDifficultySlider(),
+
                                     ]
                                   ),
                                 ],
@@ -133,7 +135,7 @@ class _MyTaquinBoardState extends State<MyTaquinBoard>{
   @override
   Widget build(BuildContext context){
     return Consumer<tileChangeNotifier>(
-      builder: (context, provTile, _) =>GridView.count(
+      builder: (context, provTile, _) =>  provTile.isGameWon()? Image.network(provTile.imgSrc,) : GridView.count(
           padding: const EdgeInsets.all(20),
           crossAxisSpacing: 1,
           mainAxisSpacing: 1,
@@ -145,7 +147,13 @@ class _MyTaquinBoardState extends State<MyTaquinBoard>{
                   GestureDetector(
                     onTap: (){
                       setState((){
-                        provTile.swapTiles(r, c);
+                        if(provTile.isGameStarted){
+                          provTile.swapTiles(r, c);
+                          if(provTile.isGameWon()){
+                            //FIN DE LA PARTIE
+                            provTile.isGameStarted = false;
+                          }
+                        }
                       });
                     },
                     child: TileWidget(provTile.tiles[r][c]),
@@ -170,7 +178,13 @@ class _MyMoveCounterState extends State<MyMoveCounter>{
   @override
   Widget build(BuildContext context){
     return Consumer<tileChangeNotifier>(
-      builder: (context, provTile, _) => Column(
+      builder: (context, provTile, _) => provTile.isGameWon() ? Column(
+        children: [
+          Text("VICTOIRE !"),
+          Text("Coups Joués: "),
+          Text(provTile.nbMoves.toString())
+        ],
+      ) : Column(
         children: [
           Text("Coups Joués: "),
           Text(provTile.nbMoves.toString())
@@ -215,9 +229,11 @@ class _MyStartButtonState extends State<MyStartButton>{
                   ),
                   onPressed: () {
                     provTile.resetTiles(imgSrc, provTile.sizeGameboard.round(), provTile.sizeGameboard.round());
+                    provTile.isGameStarted = true;
+                    provTile.userIsMovingSettings = false;
                     provTile.scramble();
                   },
-                  child: const Text('Lancer la partie'),
+                  child: provTile.isGameStarted ? Text('New Game') : Text('Start Game'),
                 ),
               ],
             ),
@@ -247,6 +263,7 @@ class _MySizeSliderState extends State<MySizeSlider>{
             onChanged: (double value) {
               setState(() {
                 provTile.sizeGameboard = value;
+                provTile.userIsMovingSettings = true;
                 provTile.resetTiles(imgSrc, provTile.sizeGameboard.round(), provTile.sizeGameboard.round());
               });
             },
@@ -273,6 +290,7 @@ class _MyDifficultySliderState extends State<MyDifficultySlider>{
             onChanged: (double value) {
               setState(() {
                 provTile.difficulte = value;
+                provTile.userIsMovingSettings = true;
               });
             },
           );
@@ -280,17 +298,49 @@ class _MyDifficultySliderState extends State<MyDifficultySlider>{
 }
 
 
+class MyLastMoveButton extends StatefulWidget{
+  @override
+  createState() => _MyLastMoveButtonState();
+}
 
-// METTRE LE TAQUIN DANS UNE ZONE (PLUS DE SCROLLABLE)   OK
-// COMPTEUR DE DEPLACEMENT ok
-// SCRAMBLE  (CALL PLUSIEURS FOIS LE SWAP) ok 
-// DIFFICULTEE SCRAMBLE ok 
-// ANNULER LE DERNIER COUP JOUEE (COPIE DU TABLEAU A CHAQUE UPDATE) 
-// VERIFIER QUE LE TABLEAU N'EST PAS WIN A LA FIN DU SCRAMBLE
 
-// BLOQUER LES PARAMETRES LORSQUE LA PARTIE EST EN COURS
+class _MyLastMoveButtonState extends State<MyLastMoveButton>{
+  @override
+  Widget build(BuildContext context){
+    final provTile = Provider.of<tileChangeNotifier>(context);
+    return   provTile.isGameStarted ? ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: Stack(
+              children: <Widget>[
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: provTile.previousIndexRowTargeted.length == 0 ? Colors.grey : Colors.blue,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.all(16.0),
+                    primary: Colors.white,
+                    textStyle: const TextStyle(fontSize: 20),
+                  ),
+                  onPressed: () {
+                    provTile.undoLastMove();
+                  },
+                  child:Text('Undo Last Move'),
+                ),
+              ],
+            ),
+          ): SizedBox.shrink();
+  }
+}
 
-// INDIQUER LORSQUE LE JOUEUR A GAGNE (AFFICHER L'IMAGE SANS GRIDVIEW)
+
+
+
+
+
 
 // (CHOIX IMAGE)
 

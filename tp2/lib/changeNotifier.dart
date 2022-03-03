@@ -13,11 +13,15 @@ class tileChangeNotifier extends ChangeNotifier{
     String _imgSrc = '../images/parliamentMothershipConnection.jpg'; 
     int _nbMoves = 0;
     double _difficulte = 1.0;
+    bool _isGameStarted = false;
+    bool _userIsMovingSettings = true;
     List<List<Tile>> _tiles = [
         [Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 1/3, true, false),Tile('../images/parliamentMothershipConnection.jpg', Alignment(0, -1), 1/3, false, true),Tile('../images/parliamentMothershipConnection.jpg', Alignment(1, -1), 1/3, false, false)],
         [Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, 0), 1/3, false, true),Tile('../images/parliamentMothershipConnection.jpg', Alignment(0, 0), 1/3, false, false),Tile('../images/parliamentMothershipConnection.jpg', Alignment(1, 0), 1/3, false, false)],
         [Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, 1), 1/3, false, false),Tile('../images/parliamentMothershipConnection.jpg', Alignment(0, 1), 1/3, false, false),Tile('../images/parliamentMothershipConnection.jpg', Alignment(1, 1), 1/3, false, false)],
 ];
+    List<int> _previousIndexRowTargeted = [];
+    List<int> _previousIndexColTargeted = [];
 
     void resetTiles(String imgSrc, int nbRows, int nbCols) {  
         this.tiles = [[]];
@@ -27,13 +31,9 @@ class tileChangeNotifier extends ChangeNotifier{
         this.indexColTargeted = 0;
         this.nbMoves = 0;
         this.imgSrc = imgSrc;
+        this.isGameStarted = false;
         
         
-        this.updateTiles();
-        //SCRAMBLE
-    }
-
-    void updateTiles(){
         for (int r = 0; r < this.nbRows; r = r + 1) { 
             this.tiles.add([]);
             for (int c = 0; c < this.nbCols; c = c + 1) { 
@@ -91,6 +91,9 @@ class tileChangeNotifier extends ChangeNotifier{
             if(t1.isTargetable){
                 Tile t2 = this.tiles[this.indexRowTargeted][this.indexColTargeted];
 
+                this.previousIndexRowTargeted.add(this.indexRowTargeted);
+                this.previousIndexColTargeted.add(this.indexColTargeted);
+
 
                 this.tiles[rowIndexToSwapTo].removeAt(colIndexToSwapTo);
                 this.tiles[rowIndexToSwapTo].insert(colIndexToSwapTo, t2);
@@ -104,13 +107,26 @@ class tileChangeNotifier extends ChangeNotifier{
 
                 this.nbMoves += 1;
                 this.updateTargetAndTargetable();
-
                 //GARDER LE TABLEAU PRECEDENT EN MEMOIRE
             }
         }
     }
 
+    void undoLastMove(){
+        if(this.previousIndexRowTargeted.length > 0 && this.previousIndexColTargeted.length > 0){
+            this.swapTiles(this.previousIndexRowTargeted[this.previousIndexRowTargeted.length - 1], this.previousIndexColTargeted[this.previousIndexColTargeted.length - 1]);
+            this.previousIndexRowTargeted.removeLast();
+            this.previousIndexColTargeted.removeLast();
+            this.previousIndexRowTargeted.removeLast();
+            this.previousIndexColTargeted.removeLast();
+            this.nbMoves -= 2;
+        }
+    }
+
     void scramble(){
+
+        List<List<Tile>> preScrambleTiles = this.tiles;
+
         var _random = new Random();
 
         //RANDOMISATION DU POINT DE DEPART
@@ -119,9 +135,8 @@ class tileChangeNotifier extends ChangeNotifier{
 
         updateTargetAndTargetable();
 
-
-        //SCRAMBLE
-        for (int i = 0; i < this.difficulte * this.nbCols * this.nbRows; i = i + 1){
+        while(this.isGameWon()){ //ON VERIFIE QUE LE TABLEAU MELANGE N'EST PAS IMMEDIATEMENT GAGNANT
+            for (int i = 0; i < this.difficulte * this.nbCols * this.nbRows; i = i + 1){
             var indexRow;
             var indexCol;
             if(_random.nextInt(2) == 0){
@@ -145,13 +160,28 @@ class tileChangeNotifier extends ChangeNotifier{
                 indexRow = this.indexRowTargeted;
             }
             this.swapTiles(indexRow, indexCol);
+            }
         }
-
+        this.previousIndexRowTargeted = [];
+        this.previousIndexColTargeted = [];
         this.nbMoves = 0;
-        print('End Scramble');
     }
 
-
+    bool isGameWon(){
+        if (this.userIsMovingSettings == false){
+            for (int r = 0; r < this.nbRows; r = r + 1) { 
+            for (int c = 0; c < this.nbCols; c = c + 1) { 
+                if(this.tiles[r][c].alignment != Alignment(-1 + (2*c)/(this.nbCols - 1), -1 + (2*r)/(this.nbRows - 1))){
+                    return false;
+                }
+            }  
+        }
+        return true;
+        }
+        else{
+            return false;
+        }
+    }
 
 
 
@@ -197,6 +227,19 @@ class tileChangeNotifier extends ChangeNotifier{
         notifyListeners();
     }
 
+
+    List<int> get previousIndexRowTargeted => _previousIndexRowTargeted;
+    set previousIndexRowTargeted(List<int> newValue){
+        _previousIndexRowTargeted = newValue;
+        notifyListeners();
+    }
+    List<int> get previousIndexColTargeted => _previousIndexColTargeted;
+    set previousIndexColTargeted(List<int> newValue){
+        _previousIndexColTargeted = newValue;
+        notifyListeners();
+    }
+
+
     String get imgSrc => _imgSrc;
     set imgSrc(String newValue){
         _imgSrc = newValue;
@@ -212,6 +255,21 @@ class tileChangeNotifier extends ChangeNotifier{
     double get difficulte => _difficulte;
     set difficulte(double newValue){
         _difficulte = newValue;
+        notifyListeners();
+    }
+
+    
+    bool get isGameStarted => _isGameStarted;
+
+    set isGameStarted(bool newValue){
+        _isGameStarted = newValue; 
+        notifyListeners();
+    }
+
+    bool get userIsMovingSettings => _userIsMovingSettings;
+
+    set userIsMovingSettings(bool newValue){
+        _userIsMovingSettings = newValue; 
         notifyListeners();
     }
 }
