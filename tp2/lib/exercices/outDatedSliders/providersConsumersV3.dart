@@ -23,7 +23,7 @@ class _MyDivisibleImageV2State extends State<MyDivisibleImageV2>{
         child: GridView.count(
           crossAxisSpacing: 1,
           mainAxisSpacing: 1,
-          crossAxisCount: provTile.valueSlider.round(), //Slider VALUE
+          crossAxisCount: provTile.sizeGameboard.round(), //Slider VALUE
           children: [
               //DEPLACEMENT DES TILES
              for (int r = 0; r < provTile.nbRows; r += 1)
@@ -55,15 +55,15 @@ class _MyDividingSliderV2State extends State<MyDividingSliderV2>{
   Widget build(BuildContext context){
     final provTile = Provider.of<tileChangeNotifier>(context);
     return  Slider(
-            value: provTile.valueSlider,
+            value: provTile.sizeGameboard,
             min:2,
             max: 10,
             divisions: 10,
-            label: provTile.valueSlider.round().toString(),
+            label: provTile.sizeGameboard.round().toString(),
             onChanged: (double value) {
               setState(() {
-                provTile.valueSlider = value;
-                provTile.resetTiles(imgSrc, provTile.valueSlider.round(), provTile.valueSlider.round());
+                provTile.sizeGameboard = value;
+                provTile.resetTiles(imgSrc, provTile.sizeGameboard.round(), provTile.sizeGameboard.round());
               });
             },
           );

@@ -1,58 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:tp2/tile.dart';
 import 'package:flutter/material.dart';
-
-//Change notifier
-class animationButtonChange extends ChangeNotifier {
-    double _valueSlider1 = 2.0;
-    double _valueSlider2 = 50.0;
-    double _valueSlider3 = 7.0;
-
-    double get valueSlider1 => _valueSlider1;
-    double get valueSlider2 => _valueSlider2;
-    double get valueSlider3 => _valueSlider3;
-
-    bool _goOn = false;
-    bool get goOn => _goOn;
-
-    set valueSlider1(double newValue){
-        _valueSlider1 = newValue;
-        notifyListeners();
-    }
-    set valueSlider2(double newValue){
-        _valueSlider2 = newValue;
-        notifyListeners();
-    }
-    set valueSlider3(double newValue){
-        _valueSlider3 = newValue;
-        notifyListeners();
-    }
-     set goOn(bool newGoOn){
-    _goOn = newGoOn;
-    notifyListeners();
-    }
-}
-
-class sliderDiviserChange extends ChangeNotifier{
-    double _valueSlider = 2.0;
-    double get valueSlider => _valueSlider;
-    set valueSlider(double newValue){
-        _valueSlider = newValue;
-        notifyListeners();
-    }
-}
-
-
-
+import "dart:math";
 
 class tileChangeNotifier extends ChangeNotifier{
-    double _valueSlider = 3.0;
+    double _sizeGameboard = 3.0;
     int _movableTileIndex = 5;
     int _nbRows = 3;
     int _nbCols = 3;
     int _indexRowTargeted = 0;
     int _indexColTargeted = 0;
     String _imgSrc = '../images/parliamentMothershipConnection.jpg'; 
+    int _nbMoves = 0;
+    double _difficulte = 1.0;
     List<List<Tile>> _tiles = [
         [Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, -1), 1/3, true, false),Tile('../images/parliamentMothershipConnection.jpg', Alignment(0, -1), 1/3, false, true),Tile('../images/parliamentMothershipConnection.jpg', Alignment(1, -1), 1/3, false, false)],
         [Tile('../images/parliamentMothershipConnection.jpg', Alignment(-1, 0), 1/3, false, true),Tile('../images/parliamentMothershipConnection.jpg', Alignment(0, 0), 1/3, false, false),Tile('../images/parliamentMothershipConnection.jpg', Alignment(1, 0), 1/3, false, false)],
@@ -65,7 +25,9 @@ class tileChangeNotifier extends ChangeNotifier{
         this.nbCols = nbCols;
         this.indexRowTargeted = 0;
         this.indexColTargeted = 0;
+        this.nbMoves = 0;
         this.imgSrc = imgSrc;
+        
         
         this.updateTiles();
         //SCRAMBLE
@@ -120,30 +82,83 @@ class tileChangeNotifier extends ChangeNotifier{
             this.tiles[this.indexRowTargeted][this.indexColTargeted + 1].isTargetable = true;
             this.tiles[this.indexRowTargeted][this.indexColTargeted - 1].isTargetable = true;
         }
+        notifyListeners();
     }
 
     void swapTiles(int rowIndexToSwapTo, int colIndexToSwapTo){
-        Tile t1 = this.tiles[rowIndexToSwapTo][colIndexToSwapTo];
-        if(t1.isTargetable){
-            Tile t2 = this.tiles[this.indexRowTargeted][this.indexColTargeted];
+        if(rowIndexToSwapTo >= 0 && rowIndexToSwapTo < this.nbRows && colIndexToSwapTo >= 0 && colIndexToSwapTo < this.nbCols){
+            Tile t1 = this.tiles[rowIndexToSwapTo][colIndexToSwapTo];
+            if(t1.isTargetable){
+                Tile t2 = this.tiles[this.indexRowTargeted][this.indexColTargeted];
 
 
-            this.tiles[rowIndexToSwapTo].removeAt(colIndexToSwapTo);
-            this.tiles[rowIndexToSwapTo].insert(colIndexToSwapTo, t2);
+                this.tiles[rowIndexToSwapTo].removeAt(colIndexToSwapTo);
+                this.tiles[rowIndexToSwapTo].insert(colIndexToSwapTo, t2);
 
-            this.tiles[this.indexRowTargeted].removeAt(this.indexColTargeted);
-            this.tiles[this.indexRowTargeted].insert(this.indexColTargeted, t1);
+                this.tiles[this.indexRowTargeted].removeAt(this.indexColTargeted);
+                this.tiles[this.indexRowTargeted].insert(this.indexColTargeted, t1);
 
-            this.indexRowTargeted = rowIndexToSwapTo;
-            this.indexColTargeted = colIndexToSwapTo;
+                this.indexRowTargeted = rowIndexToSwapTo;
+                this.indexColTargeted = colIndexToSwapTo;
 
-            this.updateTargetAndTargetable();
+
+                this.nbMoves += 1;
+                this.updateTargetAndTargetable();
+
+                //GARDER LE TABLEAU PRECEDENT EN MEMOIRE
+            }
         }
     }
 
-    double get valueSlider => _valueSlider;
-    set valueSlider(double newValue){
-        _valueSlider = newValue;
+    void scramble(){
+        var _random = new Random();
+
+        //RANDOMISATION DU POINT DE DEPART
+        this.indexRowTargeted = _random.nextInt(this.nbRows);
+        this.indexColTargeted = _random.nextInt(this.nbCols);
+
+        updateTargetAndTargetable();
+
+
+        //SCRAMBLE
+        for (int i = 0; i < this.difficulte * this.nbCols * this.nbRows; i = i + 1){
+            var indexRow;
+            var indexCol;
+            if(_random.nextInt(2) == 0){
+                //DEPLACEMENT HORIZONTAL
+                if(_random.nextInt(2) == 0){
+                    indexRow = this.indexRowTargeted + 1;
+                }
+                else{
+                    indexRow = this.indexRowTargeted - 1;
+                }
+                indexCol = this.indexColTargeted;
+            }
+            else{
+                //DEPLACEMENT VERTICAL
+                 if(_random.nextInt(2) == 0){
+                indexCol = this.indexColTargeted + 1;
+                }
+                else{
+                    indexCol = this.indexColTargeted - 1;
+                }
+                indexRow = this.indexRowTargeted;
+            }
+            this.swapTiles(indexRow, indexCol);
+        }
+
+        this.nbMoves = 0;
+        print('End Scramble');
+    }
+
+
+
+
+
+
+    double get sizeGameboard => _sizeGameboard;
+    set sizeGameboard(double newValue){
+        _sizeGameboard = newValue;
         notifyListeners();
     }
     
@@ -185,6 +200,62 @@ class tileChangeNotifier extends ChangeNotifier{
     String get imgSrc => _imgSrc;
     set imgSrc(String newValue){
         _imgSrc = newValue;
+        notifyListeners();
+    }
+
+    int get nbMoves => _nbMoves;
+    set nbMoves(int newValue){
+        _nbMoves = newValue;
+        notifyListeners();
+    }
+
+    double get difficulte => _difficulte;
+    set difficulte(double newValue){
+        _difficulte = newValue;
+        notifyListeners();
+    }
+}
+
+
+
+
+
+//Change notifier
+class animationButtonChange extends ChangeNotifier {
+    double _valueSlider1 = 2.0;
+    double _valueSlider2 = 50.0;
+    double _valueSlider3 = 7.0;
+
+    double get valueSlider1 => _valueSlider1;
+    double get valueSlider2 => _valueSlider2;
+    double get valueSlider3 => _valueSlider3;
+
+    bool _goOn = false;
+    bool get goOn => _goOn;
+
+    set valueSlider1(double newValue){
+        _valueSlider1 = newValue;
+        notifyListeners();
+    }
+    set valueSlider2(double newValue){
+        _valueSlider2 = newValue;
+        notifyListeners();
+    }
+    set valueSlider3(double newValue){
+        _valueSlider3 = newValue;
+        notifyListeners();
+    }
+     set goOn(bool newGoOn){
+    _goOn = newGoOn;
+    notifyListeners();
+    }
+}
+
+class sliderDiviserChange extends ChangeNotifier{
+    double _valueSlider = 2.0;
+    double get valueSlider => _valueSlider;
+    set valueSlider(double newValue){
+        _valueSlider = newValue;
         notifyListeners();
     }
 }
