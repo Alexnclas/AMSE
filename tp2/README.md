@@ -7,12 +7,12 @@ Dans cette application, vous trouverez un jeu de taquin, ainsi qu'une liste d'ex
 Pour accéder au jeu de taquin, il vous faut scroll la page jusqu'à arriver à 'Exercice 7: Jeu de Taquin' puis de cliquer sur la flèche à droite.
 
 L'interface se présente ainsi:
-    - En haut se trouve l'image à reconstituer, mémoriser la bien!
-    - En dessous se trouve un bouton 'Start Game' permettant de lancer la partie. Ce bouton se transforme en 'New Game' une fois la partie commencée et vous permet de relancer une partie avec la configuration actuelle.
-    - En dessous du bouton, vous trouverez un compteur de coup qui s'incrémentera lorsque vous déplacerez les tuiles.
-    - Les paramètres du jeu sont représentés par deux sliders 'Choix du nombre de divisions' et 'Difficulté' allant chacun de 1 à 10. A vous de choisir les paramètres que vous souhaitez. (Difficulté est le paramètre permettant au système de savoir à quel point il devra mélanger le système au début de la partie)
-    - ATTENTION, si un des sliders est touché lors d'une partie, l'application cosidère que les paramêtres que vous aviez sélectionnés ne vous convenaient pas et décide donc de revenir à l'écran de départ
-    - Une fois la partie lancée, un bouton 'Undo Last Move' vous permet de revenir en arrière autant de fois que vous le souhaitez. (Votre nombre de coup diminue alors)
+- En haut se trouve l'image à reconstituer, mémorisez la bien!
+- En dessous se trouve un bouton 'Start Game' permettant de lancer la partie. Ce bouton se transforme en 'New Game' une fois la partie commencée et vous permet de relancer une partie avec la configuration actuelle.
+- En dessous du bouton, vous trouverez un compteur de coup qui s'incrémentera lorsque vous déplacerez les tuiles.
+- Les paramètres du jeu sont représentés par deux sliders 'Choix du nombre de divisions' et 'Difficulté' allant chacun de 1 à 10. A vous de choisir les paramètres que vous souhaitez. (Difficulté est le paramètre permettant au système de savoir à quel point il devra mélanger le système au début de la partie)
+- ATTENTION, si un des sliders est touché lors d'une partie, l'application cosidère que les paramêtres que vous aviez sélectionnés ne vous convenaient pas et décide donc de revenir à l'écran de départ
+- Une fois la partie lancée, un bouton 'Undo Last Move' vous permet de revenir en arrière autant de fois que vous le souhaitez. (Votre nombre de coup diminue alors)
 
 ## Déroulement d'une partie
 Une fois que vous avez choisi vos paramêtres et que vous avez cliqué sur 'Start Game', l'image est alors représentée comme une grillage de tuiles. 
